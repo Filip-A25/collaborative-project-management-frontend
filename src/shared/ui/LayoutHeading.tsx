@@ -1,16 +1,30 @@
 import { SvgIconComponent } from "@mui/icons-material";
 
 interface Props {
-  icon: SvgIconComponent;
-  title: string;
+  baseRouteName: string;
+  iconSvg: SvgIconComponent;
+  subRouteName?: string;
 }
 
-export const LayoutHeading = ({ icon, title }: Props) => {
+export const LayoutHeading = ({
+  baseRouteName,
+  iconSvg,
+  subRouteName,
+}: Props) => {
+  const Icon = iconSvg;
+
   return (
-    <header>
-      <div>
-        <h1>{title}</h1>
-      </div>
+    <header className="flex items-center h-fit w-fit md:mt-7 md:ml-8 gap-2">
+      <Icon className="text-muted-1 w-4! h-4!" />
+      <h1 className="text-sm font-semibold text-muted-1">
+        {baseRouteName}
+        {subRouteName && (
+          <span>
+            &nbsp;&nbsp;/&nbsp;&nbsp;
+            {subRouteName}
+          </span>
+        )}
+      </h1>
     </header>
   );
 };

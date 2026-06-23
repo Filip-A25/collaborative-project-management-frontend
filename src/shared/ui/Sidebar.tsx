@@ -5,12 +5,27 @@ import { PRIVATE_ROUTES } from "@/const/Routes";
 import { sidebarItems } from "@/modules/projects/const/sidebarItems";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { useAuthStore } from "@/modules/auth/authStore";
+import { useEffect } from "react";
 
-export const Sidebar = () => {
+interface Props {
+  userData: User | null;
+}
+
+export const Sidebar = ({ userData }: Props) => {
   const pathname = usePathname();
 
+  const setUser = useAuthStore((store) => store.setUser);
+  const user = useAuthStore((store) => store.user);
+
+  useEffect(() => {
+    if (!user) {
+      setUser(userData);
+    }
+  }, [user, setUser, userData]);
+
   return (
-    <aside className="bg-background-2 md:fixed md:left-4 md:w-56 md:h-[95%] md:rounded-lg border-2   border-gray-100">
+    <aside className="bg-background-2 md:left-4 md:w-56! md:h-full md:rounded-lg border-2 border-gray-100">
       <nav className="md:px-4 md:my-5">
         <Link href={PRIVATE_ROUTES.Projects}>
           <p className="w-full h-full text-primary-dark-1 bg-gray-50 border border-gray-100 md:px-3 md:py-1 md:rounded-md md:text-md md:font-semibold hover:bg-gray-100 transition-colors duration-150">
@@ -25,7 +40,7 @@ export const Sidebar = () => {
               <li
                 key={item.name}
                 className={clsx(
-                  "group rounded-md",
+                  "group rounded-md w-full",
                   isRouteActive && "bg-primary-2/10 ",
                 )}
               >
