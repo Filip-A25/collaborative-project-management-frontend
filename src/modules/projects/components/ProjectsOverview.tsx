@@ -18,7 +18,7 @@ export const ProjectsOverview = ({ projects }: Props) => {
           iconSvg={sidebarItem.icon}
         />
       )}
-      <section className="md:ml-8 md:mr-6 md:mt-12 md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 min-w-0 md:gap-3">
+      <section className="md:mt-12 md:grid md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 min-w-0 md:gap-3">
         {projects?.map((project) => (
           <ProjectCard key={project.id} data={project} />
         ))}

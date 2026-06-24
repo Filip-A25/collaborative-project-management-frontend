@@ -14,7 +14,7 @@ export const LayoutHeading = ({
   const Icon = iconSvg;
 
   return (
-    <header className="flex items-center h-fit w-fit md:mt-7 md:ml-8 gap-2">
+    <header className="flex items-center h-fit w-fit md:mt-7 gap-2">
       <Icon className="text-muted-1 w-4! h-4!" />
       <h1 className="text-sm font-semibold text-muted-1">
         {baseRouteName}
