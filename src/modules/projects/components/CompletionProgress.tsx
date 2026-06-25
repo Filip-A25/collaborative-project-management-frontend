@@ -14,7 +14,7 @@ export const CompletionProgress = ({ completionPercentage }: Props) => {
       <progress
         value={completionProgress}
         max={100}
-        className="w-full rounded-full overflow-hidden h-2 md:mt-1 md:mb-4 [&::-webkit-progress-bar]:bg-muted-1/20 [&::-webkit-progress-value]:bg-primary-2"
+        className="w-full rounded-full overflow-hidden h-2 mt-2 md:mb-4 [&::-webkit-progress-bar]:bg-muted-1/20 [&::-webkit-progress-value]:bg-primary-2"
       />
     </div>
   );

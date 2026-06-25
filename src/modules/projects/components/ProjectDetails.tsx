@@ -25,14 +25,16 @@ export const ProjectDetails = ({ project }: Props) => {
           subRouteName={project.name}
         />
       )}
-      <section className="md:mt-8">
-        <header className="flex justify-between">
-          <div className="md:max-w-[60%]">
-            <span className="flex gap-6 items-center">
-              <h1 className="text-3xl text-primary-dark-1">{project.name}</h1>
+      <section className="px-4 mt-24 md:mt-8">
+        <header className="flex flex-col gap-6 md:gap-0 md:flex-row justify-between">
+          <div className="flex flex-col gap-6 md:gap-0 md:max-w-[60%]">
+            <span className="flex flex-col gap-3 md:flex-row md:gap-6 md:items-center">
+              <h1 className="order-2 text-3xl text-primary-dark-1">
+                {project.name}
+              </h1>
               <p
                 className={clsx(
-                  "text-xs rounded-full border px-3 py-1",
+                  "w-fit text-xs rounded-full border px-3 py-1",
                   getStatusTextStyling(project.status),
                 )}
               >
@@ -47,7 +49,7 @@ export const ProjectDetails = ({ project }: Props) => {
             completionPercentage={project.completionPercentage}
           />
         </header>
-        <section className="md:mt-8 md:flex md:flex-col md:items-end">
+        <section className="flex flex-col gap-6 mt-8 md:gap-0 md:mt-8 md:items-end">
           <ProjectInfoGrid project={project} />
           <div className="md:mt-8">
             <ProjectMembersList members={project.projectMembers} />

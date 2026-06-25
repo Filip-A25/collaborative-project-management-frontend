@@ -25,7 +25,7 @@ export const Sidebar = ({ userData }: Props) => {
   }, [user, setUser, userData]);
 
   return (
-    <aside className="bg-background-2 md:left-4 md:w-56! md:h-full md:rounded-lg border-2 border-gray-100">
+    <aside className="bg-background-2 hidden md:block md:left-4 md:w-56! md:h-full md:rounded-lg border-2 border-gray-100">
       <nav className="md:px-4 md:my-5">
         <Link href={PRIVATE_ROUTES.Projects}>
           <p className="w-full h-full text-primary-dark-1 bg-gray-50 border border-gray-100 md:px-3 md:py-1 md:rounded-md md:text-md md:font-semibold hover:bg-gray-100 transition-colors duration-150">
