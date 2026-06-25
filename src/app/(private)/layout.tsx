@@ -2,6 +2,7 @@ import { getUser } from "@/shared/helpers/getUser";
 import { Sidebar } from "@/shared/ui/Sidebar";
 import { ReactNode } from "react";
 import { MobileBar } from "@/shared/ui/MobileBar";
+import { MobileNav } from "@/shared/ui/MobileNav";
 
 export default async function PrivateLayout({
   children,
@@ -15,6 +16,7 @@ export default async function PrivateLayout({
       <Sidebar userData={user} />
       <MobileBar />
       <div className="flex flex-col md:w-[75%]">{children}</div>
+      <MobileNav />
     </div>
   );
 }
