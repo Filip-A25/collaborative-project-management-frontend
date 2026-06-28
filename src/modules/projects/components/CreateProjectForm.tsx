@@ -8,6 +8,7 @@ import {
   createProjectSchema,
 } from "../schemas/create-project";
 import { Input } from "@/shared/ui/Input";
+import * as Select from "@radix-ui/react-select";
 
 export const CreateProjectForm = () => {
   const form = useForm<CreateProjectType>({
@@ -46,6 +47,22 @@ export const CreateProjectForm = () => {
           register={register}
           hasError={Boolean(errors.description)}
           errorMessage={errors.description?.message}
+        />
+        <Input
+          name="name"
+          placeholder="Enter start date"
+          type="date"
+          register={register}
+          hasError={Boolean(errors.startDate)}
+          errorMessage={errors.startDate?.message}
+        />
+        <Input
+          name="name"
+          placeholder="Enter due date"
+          type="date"
+          register={register}
+          hasError={Boolean(errors.endDate)}
+          errorMessage={errors.endDate?.message}
         />
       </form>
     </FormLayout>

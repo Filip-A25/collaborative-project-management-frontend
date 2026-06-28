@@ -1,7 +1,7 @@
 import { UseFormRegister, FieldValues, Path } from "react-hook-form";
 import clsx from "clsx";
 
-type InputType = "text" | "number" | "email" | "password" | "textarea";
+type InputType = "text" | "number" | "email" | "password" | "textarea" | "date";
 type InputGroup = "auth";
 
 interface Props<T extends FieldValues> {
