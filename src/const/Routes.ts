@@ -6,4 +6,5 @@ export const ANONYMOUS_ROUTES = {
 export const PRIVATE_ROUTES = {
   Projects: "/projects",
   AccountDetails: "/account-details",
+  CreateProject: "/projects/create",
 };

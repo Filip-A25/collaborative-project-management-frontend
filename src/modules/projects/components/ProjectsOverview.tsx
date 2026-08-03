@@ -1,9 +1,10 @@
+"use client";
+
 import { Project } from "../types/project";
 import { ProjectCard } from "./ProjectCard";
 import { LayoutHeading } from "@/shared/ui/LayoutHeading";
 import { sidebarItems } from "../const/sidebarItems";
 import clsx from "clsx";
-import { AddProjectButton } from "./AddProjectButton";
 
 interface Props {
   projects?: Project[];
@@ -23,7 +24,7 @@ export const ProjectsOverview = ({ projects }: Props) => {
           iconSvg={sidebarItem.icon}
         />
       )}
-      <section className="flex flex-col gap-4 px-4 mt-24 md:mt-12 md:grid md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 min-w-0 md:gap-3">
+      <section className="flex flex-col gap-4 px-4 mt-24 pb-20 md:pl-0 md:mt-12 lg:grid lg:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 min-w-0 lg:gap-3">
         <h2
           className={clsx(
             "text-lg font-semibold md:hidden",
@@ -38,7 +39,6 @@ export const ProjectsOverview = ({ projects }: Props) => {
           <ProjectCard key={project.id} data={project} />
         ))}
       </section>
-      <AddProjectButton />
     </>
   );
 };

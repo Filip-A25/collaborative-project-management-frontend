@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${publicSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col relative">
         <Toaster richColors />
         {children}
       </body>

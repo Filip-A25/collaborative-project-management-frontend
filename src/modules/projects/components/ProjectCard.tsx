@@ -28,7 +28,7 @@ export const ProjectCard = ({ data }: Props) => {
     <article className="bg-white rounded-lg">
       <Link
         href={`${PRIVATE_ROUTES.Projects}/${data.id}`}
-        className="flex flex-col w-full h-full items-start cursor-pointer rounded-lg px-6 py-4 gap-4 min-h-[200px] md:h-[320px] xl:h-[340px] md:gap-0 md:px-8 md:py-5 text-primary-dark-1 border border-gray-200 hover:border-gray-300 hover:shadow-md focus:shadow-md [--tw-shadow-color:rgb(0,0,0,0.03)] transition-all duration-200 ease-in-out"
+        className="flex flex-col w-full h-full items-start cursor-pointer rounded-lg px-6 py-4 gap-4 min-h-[200px] md:h-[320px] xl:h-[350px] md:gap-0 md:px-8 md:py-5 text-primary-dark-1 border border-gray-200 hover:border-gray-300 hover:shadow-md focus:shadow-md [--tw-shadow-color:rgb(0,0,0,0.03)] transition-all duration-200 ease-in-out"
       >
         <header className="flex justify-between items-start gap-2 w-full xl:h-16">
           <h3 className="text-xl font-semibold md:text-2xl md:font-medium text-start line-clamp-2">
