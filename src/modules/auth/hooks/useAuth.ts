@@ -25,7 +25,7 @@ export const useAuth = () => {
     }
 
     toast.success(responseData.message);
-    router.push(ANONYMOUS_ROUTES.Login);
+    router.replace(ANONYMOUS_ROUTES.Login);
   };
 
   const onLogin = async (data: LoginType) => {
@@ -45,7 +45,7 @@ export const useAuth = () => {
     }
 
     toast.success(responseData.message);
-    router.push(PRIVATE_ROUTES.Projects);
+    router.replace(PRIVATE_ROUTES.Projects);
   };
 
   const onLogout = async () => {
@@ -62,7 +62,7 @@ export const useAuth = () => {
     }
 
     toast.success("Successfully logged out.");
-    router.push(ANONYMOUS_ROUTES.Login);
+    router.replace(ANONYMOUS_ROUTES.Login);
   };
 
   return { onRegister, onLogin, onLogout };
