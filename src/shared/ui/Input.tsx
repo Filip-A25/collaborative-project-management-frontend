@@ -62,7 +62,7 @@ export const Input = <T extends FieldValues>({
           )}
           <textarea
             {...register(name)}
-            cols={3}
+            rows={5}
             className="bg-gray-50 border text-sm focus:text-primary-dark-2 text-muted-1 border-gray-100 rounded-lg max-md:w-full px-4 py-2 outline-0 focus:border-gray-200 hover:border-gray-200 hover:shadow-md focus:shadow-md [--tw-shadow-color:rgb(0,0,0,0.03)] transition-all duration-150 ease-in-out"
             placeholder={placeholder}
           />

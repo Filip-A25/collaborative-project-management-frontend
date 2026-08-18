@@ -2,18 +2,19 @@
 
 import { API_ENDPOINTS } from "@/shared/const/apiEndpoints";
 import { cookies } from "next/headers";
-import { CreateProjectType } from "../schemas/create-project";
-import { Project } from "../types/project";
+import { UpdateProjectType } from "../schemas/update-project";
 
-export async function createProject(data: CreateProjectType) {
+export async function updateProject(data: UpdateProjectType) {
   try {
     const cookieStore = await cookies();
     const authToken = cookieStore.get("auth_token")?.value ?? null;
 
     const reqBodyJson = JSON.stringify(data);
 
-    const response = await fetch(API_ENDPOINTS.Projects, {
-      method: "POST",
+    const endpoint = `${API_ENDPOINTS.Projects}/${data.id}`;
+
+    const response = await fetch(endpoint, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
@@ -21,10 +22,10 @@ export async function createProject(data: CreateProjectType) {
       body: reqBodyJson,
     });
 
-    const responseData: ApiResponse<Project> = await response.json();
+    const responseData: ApiResponse = await response.json();
 
     return responseData;
-  } catch (error: unknown) {
+  } catch {
     throw new Error("Something went wrong while trying to create project.");
   }
 }

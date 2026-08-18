@@ -1,4 +1,4 @@
-type PermissionName =
+type PermissionValue =
   | "ViewProject"
   | "ManageTasks"
   | "InviteMembers"
@@ -8,7 +8,7 @@ type PermissionName =
 
 interface RolePermission {
   id: number;
-  name: PermissionName;
+  name: PermissionValue;
 }
 
 export interface ProjectRole {

@@ -2,10 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  CreateProjectType,
-  createProjectSchema,
-} from "../schemas/create-project";
 import { Input } from "@/shared/ui/Input";
 import { FormButton } from "@/shared/ui/FormButton";
 import { useProjects } from "../hooks/useProjects";
@@ -14,26 +10,42 @@ import { useFieldArray, Controller } from "react-hook-form";
 import { Permission } from "../types/permission";
 import { NestedAddButton } from "@/shared/ui/NestedAddButton";
 import { NestedRemoveButton } from "@/shared/ui/NestedRemoveButton";
+import { Project } from "../types/project";
+import {
+  UpdateProjectType,
+  updateProjectSchema,
+} from "../schemas/update-project";
 import { currencyOptions } from "../const/currencyOptions";
 import { formColorOptions } from "../const/roleColorOptions";
 import { formSelectStyling } from "../const/formSelectStyling";
 
 interface Props {
+  projectData: Project;
   permissionsData: Permission[];
 }
 
-export const CreateProjectForm = ({ permissionsData }: Props) => {
-  const form = useForm<CreateProjectType>({
+export const UpdateProjectForm = ({ permissionsData, projectData }: Props) => {
+  const rolesWithoutProjectId =
+    projectData.roles.map((role) => ({
+      id: role.id,
+      name: role.name,
+      color: role.color,
+      permissions: role.permissions,
+      isCreatorRole: role.isCreatorRole,
+    })) ?? [];
+
+  const form = useForm<UpdateProjectType>({
     defaultValues: {
-      name: "",
-      description: "",
-      startDate: undefined,
-      endDate: undefined,
-      currency: "EUR",
-      budgetAmount: 0,
-      roles: [],
+      id: projectData.id,
+      name: projectData.name,
+      description: projectData.description ?? "",
+      startDate: projectData.startDate ?? undefined,
+      endDate: projectData.endDate ?? undefined,
+      currency: projectData.currency ?? "EUR",
+      budgetAmount: projectData.budgetAmount ?? 0,
+      roles: rolesWithoutProjectId,
     },
-    resolver: zodResolver(createProjectSchema),
+    resolver: zodResolver(updateProjectSchema),
   });
 
   const {
@@ -48,7 +60,7 @@ export const CreateProjectForm = ({ permissionsData }: Props) => {
     name: "roles",
   });
 
-  const { createNewProject } = useProjects();
+  const { updateCurrentProject } = useProjects();
 
   return (
     <form>
@@ -125,7 +137,7 @@ export const CreateProjectForm = ({ permissionsData }: Props) => {
         />
       </div>
 
-      <div className="md:mt-4">
+      <div className="mt-4">
         <p>Roles</p>
         {fields.map((field, index) => (
           <div key={field.id} className="pl-3">
@@ -163,50 +175,48 @@ export const CreateProjectForm = ({ permissionsData }: Props) => {
                 )}
               />
             </div>
-            <div className="md:w-[380px] mt-4">
-              <label
-                htmlFor="permissions"
-                className="text-sm text-primary-dark-1"
-              >
-                Permissions
-              </label>
-              <Controller
-                name={`roles.${index}.permissions`}
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    instanceId={`role-${index}-permissions-select`}
-                    closeMenuOnSelect={false}
-                    isMulti
-                    options={permissionsData}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id.toString()}
-                    placeholder="Add permissions for the role"
-                    classNames={formSelectStyling}
-                    value={permissionsData.filter((o) =>
-                      field.value?.some((v) => v.id === o.id),
-                    )}
-                    onChange={(selected) => field.onChange(selected)}
-                  />
-                )}
-              />
-            </div>
-            <NestedRemoveButton clickFn={() => remove(index)} />
+            {!field.isCreatorRole && (
+              <div className="md:w-[380px] mt-4">
+                <label
+                  htmlFor="permissions"
+                  className="text-sm text-primary-dark-1"
+                >
+                  Permissions
+                </label>
+                <Controller
+                  name={`roles.${index}.permissions`}
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      instanceId={`role-${index}-permissions-select`}
+                      closeMenuOnSelect={false}
+                      isMulti
+                      options={permissionsData}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id.toString()}
+                      placeholder="Add permissions for the role"
+                      classNames={formSelectStyling}
+                      value={permissionsData.filter((o) =>
+                        field.value?.some((v) => v.id === o.id),
+                      )}
+                      onChange={(selected) => field.onChange(selected)}
+                    />
+                  )}
+                />
+              </div>
+            )}
+            {!field.isCreatorRole && (
+              <NestedRemoveButton clickFn={() => remove(index)} />
+            )}
           </div>
         ))}
         <NestedAddButton
           label="Add role"
-          clickFn={() =>
-            append({
-              name: "",
-              color: "",
-              permissions: [],
-            })
-          }
+          clickFn={() => append({ name: "", color: "", permissions: [] })}
         />
       </div>
 
-      <FormButton title="Submit" onClick={handleSubmit(createNewProject)} />
+      <FormButton title="Submit" onClick={handleSubmit(updateCurrentProject)} />
     </form>
   );
 };
