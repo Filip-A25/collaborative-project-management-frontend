@@ -1,4 +1,4 @@
-import { getUser } from "@/shared/helpers/getUser";
+import { getUser } from "@/modules/account/queries/getUser";
 import { Sidebar } from "@/shared/ui/Sidebar";
 import { ReactNode } from "react";
 import { MobileBar } from "@/shared/ui/MobileBar";
@@ -10,11 +10,11 @@ export default async function PrivateLayout({
 }: {
   children: ReactNode;
 }) {
-  const user = await getUser();
+  const response = await getUser();
 
   return (
     <div className="min-h-dvh bg-background-1 md:pt-3 md:pb-20 md:pl-5 md:gap-8 md:flex">
-      <Sidebar userData={user} />
+      <Sidebar userData={response.data} />
       <MobileBar />
       <div className="flex flex-col md:w-[75%]">{children}</div>
       <MobileNav />
