@@ -9,7 +9,7 @@ import { useAuthStore } from "@/modules/auth/authStore";
 import { useEffect } from "react";
 
 interface Props {
-  userData: User | null;
+  userData?: User;
 }
 
 export const Sidebar = ({ userData }: Props) => {
@@ -19,7 +19,7 @@ export const Sidebar = ({ userData }: Props) => {
   const user = useAuthStore((store) => store.user);
 
   useEffect(() => {
-    if (!user) {
+    if (!user && userData) {
       setUser(userData);
     }
   }, [user, setUser, userData]);

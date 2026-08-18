@@ -1,6 +1,7 @@
 import { getAllPermissions } from "@/modules/projects/queries/getAllPermissions";
 import { getProjectById } from "@/modules/projects/queries/getProjectById";
 import { UpdateProjectForm } from "@/modules/projects/components/UpdateProjectForm";
+import { FullPageFormLayout } from "@/shared/ui/FullPageFormLayout";
 
 export default async function ProjectUpdatePage({
   params,
@@ -15,12 +16,11 @@ export default async function ProjectUpdatePage({
   if (!projectData) return;
 
   return (
-    <section className="bg-white pt-20 pb-24 px-4 md:py-5 md:px-8">
-      <h1 className="text-2xl">Update {projectData.name}</h1>
+    <FullPageFormLayout title={`Update ${projectData.name}`}>
       <UpdateProjectForm
         permissionsData={permissionDate}
         projectData={projectData}
       />
-    </section>
+    </FullPageFormLayout>
   );
 }
