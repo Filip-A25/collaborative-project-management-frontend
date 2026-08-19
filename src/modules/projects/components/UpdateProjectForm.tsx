@@ -18,6 +18,7 @@ import {
 import { currencyOptions } from "../const/currencyOptions";
 import { formColorOptions } from "../const/roleColorOptions";
 import { formSelectStyling } from "../const/formSelectStyling";
+import { projectStatusOptions } from "../const/projectStatusOptions";
 
 interface Props {
   projectData: Project;
@@ -43,6 +44,7 @@ export const UpdateProjectForm = ({ permissionsData, projectData }: Props) => {
       endDate: projectData.endDate ?? undefined,
       currency: projectData.currency ?? "EUR",
       budgetAmount: projectData.budgetAmount ?? 0,
+      status: projectData.status,
       roles: rolesWithoutProjectId,
     },
     resolver: zodResolver(updateProjectSchema),
@@ -128,6 +130,28 @@ export const UpdateProjectForm = ({ permissionsData, projectData }: Props) => {
               defaultValue={currencyOptions[0]}
               value={currencyOptions.find(
                 (currency) => currency.value === field.value,
+              )}
+              onChange={(selected) => field.onChange(selected?.value)}
+              classNames={formSelectStyling}
+              className="md:min-w-[420px] md:w-1/2"
+            />
+          )}
+        />
+      </div>
+      <div className="mt-4">
+        <label htmlFor="status" className="text-sm text-primary-dark-1">
+          Status
+        </label>
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => (
+            <Select
+              instanceId="status-select"
+              options={projectStatusOptions}
+              defaultValue={projectStatusOptions[0]}
+              value={projectStatusOptions.find(
+                (status) => status.value === field.value,
               )}
               onChange={(selected) => field.onChange(selected?.value)}
               classNames={formSelectStyling}
