@@ -2,7 +2,7 @@ import { ProjectMember } from "./projectMember";
 import { ProjectRoleType } from "../schemas/project-role";
 import { CurrencyValue } from "../const/currencyOptions";
 
-export type Status = "Active" | "Planning" | "OnHold" | "Completed";
+type Status = "Active" | "Planning" | "OnHold" | "Completed";
 
 export interface Project {
   id: string;
