@@ -13,10 +13,10 @@ export default async function PrivateLayout({
   const response = await getUser();
 
   return (
-    <div className="min-h-dvh bg-background-1 md:pt-3 md:pb-20 md:pl-5 md:gap-8 md:flex">
+    <div className="min-h-dvh bg-background-1 md:pt-3 md:pb-20 md:pl-5 md:gap-4 md:flex">
       <Sidebar userData={response.data} />
       <MobileBar />
-      <div className="flex flex-col md:w-[75%]">{children}</div>
+      <div className="flex flex-col md:w-[82.5%]">{children}</div>
       <MobileNav />
       <CreateProjectButton />
     </div>
