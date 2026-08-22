@@ -11,7 +11,6 @@ import { ProjectMembersList } from "./ProjectMembersList";
 import { DeleteForever } from "@mui/icons-material";
 import { useProjects } from "../hooks/useProjects";
 import { ProjectMembersModal } from "./ProjectMembersModal";
-import { useModal } from "@/shared/hooks/useModal";
 import { useMemberStore } from "../stores/memberStore";
 import { useAuthStore } from "@/modules/auth/authStore";
 import { useEffect, useState } from "react";
@@ -21,15 +20,29 @@ import Link from "next/link";
 import { PRIVATE_ROUTES } from "@/const/Routes";
 import { useProjectAuthorization } from "../hooks/useProjectAuthorization";
 import { PermissionName } from "../types/permissionName";
+import { TasksOverview } from "@/modules/tasks/components/TasksOverview";
+import { Task } from "@/modules/tasks/types/task";
+import { ModalPortal } from "@/shared/ui/ModalPortal";
+import { CreateTaskForm } from "@/modules/tasks/components/CreateTaskForm";
+import { useModalStore } from "@/shared/stores/modalStore";
+import { TaskInfoCard } from "@/modules/tasks/components/TaskInfoCard";
+import { UpdateTaskForm } from "@/modules/tasks/components/UpdateTaskForm";
+import { useTaskStore } from "@/modules/tasks/store/taskStore";
 
 interface Props {
   project: Project;
+  tasks: Task[];
+  taskTypes: TaskType[];
 }
 
-export const ProjectDetails = ({ project }: Props) => {
+export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
   const [projectMembers, setProjectMembers] = useState<
     ProjectMember[] | undefined
   >(project.projectMembers);
+
+  const modalPayload = useModalStore((store) => store.payload);
+  const closeModalFn = useModalStore((store) => store.closeModal);
+  const setTasks = useTaskStore((store) => store.setTasks);
 
   const sidebarItem = sidebarItems.find((item) => item.name === "Projects");
   const projectStatus =
@@ -40,13 +53,17 @@ export const ProjectDetails = ({ project }: Props) => {
   const setMember = useMemberStore((store) => store.setMember);
 
   const { deleteProjectWithId } = useProjects();
-  const { closeModal, openModal, isModalOpen } = useModal();
   const { doesUserHaveProjectPermission } = useProjectAuthorization();
 
   const handleRemovedMember = (memberId: number) => {
     setProjectMembers((prev) =>
       prev?.filter((member) => member.id !== memberId),
     );
+  };
+
+  const handleCloseModal = () => {
+    closeModalFn();
+    document.body.style.overflow = "auto";
   };
 
   useEffect(() => {
@@ -57,6 +74,10 @@ export const ProjectDetails = ({ project }: Props) => {
       setMember(userMember);
     }
   }, [user, projectMembers, setMember]);
+
+  useEffect(() => {
+    setTasks(tasks);
+  }, [tasks, setTasks]);
 
   return (
     <>
@@ -94,7 +115,7 @@ export const ProjectDetails = ({ project }: Props) => {
             {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
               <div className="flex flex-col sm:flex-row sm:gap-2 md:grid md:grid-cols-2">
                 <Link
-                  className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg md:py-1 max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 max-md:py-1 max-md:mt-3 text-sm text-muted-1 hover:text-primary-2"
+                  className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg  max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-primary-2"
                   href={editRoute}
                 >
                   <EditIcon
@@ -104,7 +125,7 @@ export const ProjectDetails = ({ project }: Props) => {
                   Edit
                 </Link>
                 <button
-                  className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg md:py-1  max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 max-md:py-1 max-md:mt-3 text-sm text-muted-1 hover:text-red-500"
+                  className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-red-500"
                   onClick={() => deleteProjectWithId(project.id)}
                 >
                   <DeleteForever
@@ -119,25 +140,57 @@ export const ProjectDetails = ({ project }: Props) => {
         </header>
         <section className="flex flex-col gap-6 mt-8 md:gap-0 md:mt-8 md:items-end">
           <ProjectInfoGrid project={project} />
-          {projectMembers && (
-            <div className="md:mt-8">
-              <ProjectMembersList
-                members={projectMembers}
-                openModal={openModal}
-              />
-            </div>
-          )}
+          <div className="flex max-xl:flex-col md:w-full gap-4 md:mt-8">
+            <TasksOverview />
+            {projectMembers && <ProjectMembersList members={projectMembers} />}
+          </div>
         </section>
       </section>
-      {projectMembers && isModalOpen && (
+      {projectMembers && modalPayload.type === "viewMembers" && (
         <div className="relative w-full h-full bg-black/20">
           <ProjectMembersModal
-            closeModal={closeModal}
+            closeModal={handleCloseModal}
             members={projectMembers}
             projectId={project.id}
             handleRemovedMember={handleRemovedMember}
           />
         </div>
+      )}
+      {modalPayload.type === "createTask" && (
+        <ModalPortal
+          closeFn={handleCloseModal}
+          headingText="Create task"
+          wrapperStyling="md:py-8 md:h-[90vh] md:px-10 overflow-scroll"
+        >
+          <CreateTaskForm
+            projectData={project}
+            closeTaskModalFn={handleCloseModal}
+          />
+        </ModalPortal>
+      )}
+      {modalPayload.type === "updateTask" && (
+        <ModalPortal
+          closeFn={handleCloseModal}
+          headingText={`Update ${modalPayload.data.task.title}`}
+          wrapperStyling="md:py-8 md:h-[90vh] md:w-[500px] md:px-10 overflow-scroll"
+        >
+          <UpdateTaskForm
+            taskData={modalPayload.data.task}
+            projectData={project}
+            closeTaskModalFn={handleCloseModal}
+          />
+        </ModalPortal>
+      )}
+      {modalPayload.type === "viewTask" && (
+        <ModalPortal
+          closeFn={handleCloseModal}
+          wrapperStyling="mx-3 px-8 py-4 md:h-[90vh] md:w-[500px] overflow-scroll flex flex-col"
+        >
+          <TaskInfoCard
+            projectId={project.id}
+            taskId={modalPayload.data.taskId}
+          />
+        </ModalPortal>
       )}
     </>
   );

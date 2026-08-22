@@ -3,21 +3,28 @@
 import { ProjectMember } from "../types/projectMember";
 import clsx from "clsx";
 import { getRoleColorStyling } from "../utils/getRoleColorStyling";
+import { useModalStore } from "@/shared/stores/modalStore";
 
 interface Props {
   members: ProjectMember[];
-  openModal: VoidFunction;
 }
 
-export const ProjectMembersList = ({ members, openModal }: Props) => {
+export const ProjectMembersList = ({ members }: Props) => {
+  const openModal = useModalStore((store) => store.openModal);
+
+  const handleOpenModal = () => {
+    openModal({ type: "viewMembers" });
+    document.body.style.overflow = "hidden";
+  };
+
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex justify-between md:w-60">
         <h2 className="text-primary-dark-1 text-base md:text-sm">
           Members <span className="text-muted-1">({members.length})</span>
         </h2>
         <button
-          onClick={openModal}
+          onClick={handleOpenModal}
           className="text-xs text-muted-1 cursor-pointer hover:text-primary-2 transition-colors duration-200 ease-in-out"
         >
           View all

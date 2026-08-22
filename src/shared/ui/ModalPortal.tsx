@@ -19,7 +19,7 @@ export const ModalPortal = ({
       <div className={clsx("bg-white rounded-lg ", wrapperStyling)}>
         <div
           className={clsx(
-            "flex mb-4 ",
+            "flex mb-4 gap-6 ",
             headingText ? "justify-between" : "justify-end",
           )}
         >
