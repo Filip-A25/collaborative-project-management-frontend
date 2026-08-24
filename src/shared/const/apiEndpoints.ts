@@ -6,4 +6,5 @@ export const API_ENDPOINTS = {
   Login: `${API_URL}/users/login`,
   Projects: `${API_URL}/projects`,
   Permissions: `${API_URL}/permissions`,
+  UserInvites: `${API_URL}/invites/me`,
 };
