@@ -3,10 +3,14 @@
 import { TaskRow } from "./TaskRow";
 import { useModalStore } from "@/shared/stores/modalStore";
 import { useTaskStore } from "../store/taskStore";
+import { useProjectAuthorization } from "@/modules/projects/hooks/useProjectAuthorization";
+import { PermissionName } from "@/modules/projects/types/permissionName";
 
 export const TasksOverview = () => {
   const openModal = useModalStore((store) => store.openModal);
   const tasks = useTaskStore((store) => store.tasks);
+
+  const { doesUserHaveProjectPermission } = useProjectAuthorization();
 
   const handleOpenCreateModal = () => {
     openModal({ type: "createTask" });
@@ -17,12 +21,14 @@ export const TasksOverview = () => {
     <div className="w-full max-xl:order-2">
       <header className="flex justify-between">
         <h3 className="text-primary-dark-1 md:text-sm">Tasks</h3>
-        <button
-          className="cursor-pointer text-xs text-white rounded-full px-2 bg-primary-2/70 hover:bg-primary-1 transition-colors duration-200 ease-in-out"
-          onClick={handleOpenCreateModal}
-        >
-          + Add task
-        </button>
+        {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
+          <button
+            className="cursor-pointer text-xs text-white rounded-full px-2 bg-primary-2/70 hover:bg-primary-1 transition-colors duration-200 ease-in-out"
+            onClick={handleOpenCreateModal}
+          >
+            + Add task
+          </button>
+        )}
       </header>
       <div className="border rounded-md overflow-hidden mt-2 border-muted-1/30">
         {Boolean(tasks.length) ? (

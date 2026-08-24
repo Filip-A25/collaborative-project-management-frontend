@@ -1,3 +1,5 @@
+"use client";
+
 import { format } from "date-fns";
 import { statusOptions, priorityOptions } from "../const/taskDropdownOptions";
 import clsx from "clsx";
@@ -6,6 +8,8 @@ import { useModalStore } from "@/shared/stores/modalStore";
 import { DeleteForever } from "@mui/icons-material";
 import { useTasks } from "../hooks/useTasks";
 import { useTaskStore } from "../store/taskStore";
+import { useProjectAuthorization } from "@/modules/projects/hooks/useProjectAuthorization";
+import { PermissionName } from "@/modules/projects/types/permissionName";
 
 interface Props {
   projectId: string;
@@ -37,6 +41,7 @@ export const TaskInfoCard = ({ projectId, taskId }: Props) => {
   const openModal = useModalStore((store) => store.openModal);
   const allTasks = useTaskStore((store) => store.tasks);
 
+  const { doesUserHaveProjectPermission } = useProjectAuthorization();
   const { deleteCurrentTask } = useTasks();
   const task = allTasks.find((taskData) => taskData.id === taskId);
 
@@ -59,31 +64,33 @@ export const TaskInfoCard = ({ projectId, taskId }: Props) => {
 
   return (
     <div className="flex flex-col">
-      <h3 className="text-primary-dark-1/80 font-medium text-xl">
+      <h3 className="text-primary-dark-1/80 font-medium text-xl mb-2">
         {task.title}
       </h3>
-      <div className="flex mt-2 gap-2">
-        <button
-          className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 hover:text-primary-2"
-          onClick={() => openModal({ type: "updateTask", data: { task } })}
-        >
-          <EditIcon
-            sx={{ fontSize: 16 }}
-            className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
-          />
-          Edit
-        </button>
-        <button
-          className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 hover:text-red-500"
-          onClick={() => deleteCurrentTask(projectId, taskId)}
-        >
-          <DeleteForever
-            sx={{ fontSize: 16 }}
-            className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
-          />
-          Delete
-        </button>
-      </div>
+      {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
+        <div className="flex gap-2">
+          <button
+            className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 hover:text-primary-2"
+            onClick={() => openModal({ type: "updateTask", data: { task } })}
+          >
+            <EditIcon
+              sx={{ fontSize: 16 }}
+              className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
+            />
+            Edit
+          </button>
+          <button
+            className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 hover:text-red-500"
+            onClick={() => deleteCurrentTask(projectId, taskId)}
+          >
+            <DeleteForever
+              sx={{ fontSize: 16 }}
+              className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
+            />
+            Delete
+          </button>
+        </div>
+      )}
       <div className="flex flex-col h-full">
         <div className="flex flex-col gap-4 mt-6 mb-8 text-sm">
           <article className="grid grid-cols-2 gap-4">

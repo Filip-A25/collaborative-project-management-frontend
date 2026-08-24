@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { Task } from "@/modules/tasks/types/task";
 
-type ModalPayload =
+export type ModalPayload =
   | { type: "createTask" }
   | { type: "updateTask"; data: { task: Task } }
   | { type: "viewTask"; data: { taskId: string } }
   | { type: "viewMembers" }
+  | { type: "inviteMember" }
   | { type: null };
 
 interface ModalState {

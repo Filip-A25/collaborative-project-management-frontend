@@ -27,7 +27,7 @@ export async function getUserProjects() {
       throw new Error("Something went wrong while trying to fetch projects.");
     }
 
-    return responseData.data;
+    return responseData.data ?? [];
   } catch {
     throw new Error("Something went wrong while trying to fetch projects.");
   }

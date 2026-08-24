@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { CompletionProgress } from "./CompletionProgress";
 import { ProjectInfoGrid } from "./ProjectInfoGrid";
 import { ProjectMembersList } from "./ProjectMembersList";
-import { DeleteForever } from "@mui/icons-material";
+import { DeleteForever, PersonAdd, ExitToApp } from "@mui/icons-material";
 import { useProjects } from "../hooks/useProjects";
 import { ProjectMembersModal } from "./ProjectMembersModal";
 import { useMemberStore } from "../stores/memberStore";
@@ -28,6 +28,7 @@ import { useModalStore } from "@/shared/stores/modalStore";
 import { TaskInfoCard } from "@/modules/tasks/components/TaskInfoCard";
 import { UpdateTaskForm } from "@/modules/tasks/components/UpdateTaskForm";
 import { useTaskStore } from "@/modules/tasks/store/taskStore";
+import { CreateInviteForm } from "./CreateInviteForm";
 
 interface Props {
   project: Project;
@@ -42,6 +43,7 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
 
   const modalPayload = useModalStore((store) => store.payload);
   const closeModalFn = useModalStore((store) => store.closeModal);
+  const openModal = useModalStore((store) => store.openModal);
   const setTasks = useTaskStore((store) => store.setTasks);
 
   const sidebarItem = sidebarItems.find((item) => item.name === "Projects");
@@ -50,9 +52,10 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
   const editRoute = `${PRIVATE_ROUTES.Projects}/${project.id}/update`;
 
   const user = useAuthStore((store) => store.user);
+  const member = useMemberStore((store) => store.member);
   const setMember = useMemberStore((store) => store.setMember);
 
-  const { deleteProjectWithId } = useProjects();
+  const { deleteProjectWithId, removeMember } = useProjects();
   const { doesUserHaveProjectPermission } = useProjectAuthorization();
 
   const handleRemovedMember = (memberId: number) => {
@@ -112,30 +115,56 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
             <CompletionProgress
               completionPercentage={project.completionPercentage}
             />
-            {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
-              <div className="flex flex-col sm:flex-row sm:gap-2 md:grid md:grid-cols-2">
-                <Link
-                  className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg  max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-primary-2"
-                  href={editRoute}
+            <div className="flex flex-col sm:flex-row sm:gap-2 md:grid md:grid-cols-2">
+              {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
+                <>
+                  <Link
+                    className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg  max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-primary-2"
+                    href={editRoute}
+                  >
+                    <EditIcon
+                      fontSize="small"
+                      className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
+                    />
+                    Edit
+                  </Link>
+                  <button
+                    className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-red-500"
+                    onClick={() => deleteProjectWithId(project.id)}
+                  >
+                    <DeleteForever
+                      fontSize="small"
+                      className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
+                    />
+                    Delete
+                  </button>
+                </>
+              )}
+              {doesUserHaveProjectPermission(PermissionName.InviteMembers) && (
+                <button
+                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 md:border-muted-1 outline-none items-end max-md:hover:border-primary-2 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-primary-2"
+                  onClick={() => openModal({ type: "inviteMember" })}
                 >
-                  <EditIcon
+                  <PersonAdd
                     fontSize="small"
                     className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
                   />
-                  Edit
-                </Link>
-                <button
-                  className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-red-500"
-                  onClick={() => deleteProjectWithId(project.id)}
-                >
-                  <DeleteForever
-                    fontSize="small"
-                    className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
-                  />
-                  Delete
+                  Add member
                 </button>
-              </div>
-            )}
+              )}
+              {member && !Boolean(member.projectRole?.isCreatorRole) && (
+                <button
+                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg max-md:border-red-600 max-md:text-red-600 border md:hover:border-red-600 md:border-muted-1 outline-none items-end max-md:hover:border-red-600 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-red-600"
+                  onClick={() => removeMember(project.id, member?.id)}
+                >
+                  <ExitToApp
+                    fontSize="small"
+                    className="max-md:text-red-600 text-muted-1 group-hover:text-red-600"
+                  />
+                  Leave project
+                </button>
+              )}
+            </div>
           </div>
         </header>
         <section className="flex flex-col gap-6 mt-8 md:gap-0 md:mt-8 md:items-end">
@@ -184,12 +213,21 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
       {modalPayload.type === "viewTask" && (
         <ModalPortal
           closeFn={handleCloseModal}
-          wrapperStyling="mx-3 px-8 py-4 md:h-[90vh] md:w-[500px] overflow-scroll flex flex-col"
+          wrapperStyling="mx-3 px-8 py-4 md:h-[90vh] md:max-h-[620px] md:w-[500px] overflow-scroll flex flex-col"
         >
           <TaskInfoCard
             projectId={project.id}
             taskId={modalPayload.data.taskId}
           />
+        </ModalPortal>
+      )}
+      {modalPayload.type === "inviteMember" && (
+        <ModalPortal
+          closeFn={handleCloseModal}
+          headingText="Invite a user to the project"
+          wrapperStyling="mx-3 px-8 py-4 md:w-[500px] overflow-scroll flex flex-col"
+        >
+          <CreateInviteForm projectId={project.id} roles={project.roles} />
         </ModalPortal>
       )}
     </>
