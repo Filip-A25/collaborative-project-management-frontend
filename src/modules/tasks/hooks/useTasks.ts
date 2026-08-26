@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { deleteTask } from "../queries/deleteTask";
 import { useModalStore } from "@/shared/stores/modalStore";
 import { useTaskStore } from "../store/taskStore";
+import { CreateTaskTypeSchema } from "../schemas/create-task-type";
+import { createTaskType } from "../queries/createTaskType";
 
 export const useTasks = () => {
   const router = useRouter();
@@ -65,5 +67,28 @@ export const useTasks = () => {
     closeModal();
   };
 
-  return { createNewTask, updateCurrentTask, deleteCurrentTask };
+  const createNewTaskType = async (
+    projectId: string,
+    data: CreateTaskTypeSchema,
+  ) => {
+    const response = await createTaskType(projectId, data);
+
+    if (!response.success) {
+      toast.error(response.message);
+      return;
+    }
+
+    if (response.message) {
+      toast.success(response.message);
+    }
+
+    closeModal();
+  };
+
+  return {
+    createNewTask,
+    updateCurrentTask,
+    deleteCurrentTask,
+    createNewTaskType,
+  };
 };

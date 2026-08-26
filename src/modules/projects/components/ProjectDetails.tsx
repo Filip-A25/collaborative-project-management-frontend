@@ -29,6 +29,7 @@ import { TaskInfoCard } from "@/modules/tasks/components/TaskInfoCard";
 import { UpdateTaskForm } from "@/modules/tasks/components/UpdateTaskForm";
 import { useTaskStore } from "@/modules/tasks/store/taskStore";
 import { CreateInviteForm } from "./CreateInviteForm";
+import { CreateTaskTypeForm } from "@/modules/tasks/components/CreateTaskTypeForm";
 
 interface Props {
   project: Project;
@@ -194,6 +195,7 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
           <CreateTaskForm
             projectData={project}
             closeTaskModalFn={handleCloseModal}
+            taskTypes={taskTypes}
           />
         </ModalPortal>
       )}
@@ -207,6 +209,7 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
             taskData={modalPayload.data.task}
             projectData={project}
             closeTaskModalFn={handleCloseModal}
+            taskTypes={taskTypes}
           />
         </ModalPortal>
       )}
@@ -228,6 +231,15 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
           wrapperStyling="mx-3 px-8 py-4 md:w-[500px] overflow-scroll flex flex-col"
         >
           <CreateInviteForm projectId={project.id} roles={project.roles} />
+        </ModalPortal>
+      )}
+      {modalPayload.type === "createTaskType" && (
+        <ModalPortal
+          closeFn={handleCloseModal}
+          headingText="Create a task type"
+          wrapperStyling="mx-3 px-8 py-4 md:w-[500px] overflow-scroll flex flex-col"
+        >
+          <CreateTaskTypeForm projectId={project.id} />
         </ModalPortal>
       )}
     </>
