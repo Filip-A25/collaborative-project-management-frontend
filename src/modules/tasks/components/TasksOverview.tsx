@@ -25,9 +25,9 @@ export const TasksOverview = () => {
           {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
             <button
               className="cursor-pointer text-xs text-primary-2/70 rounded-full px-2 border border-primary-2/70 hover:border-primary-1 hover:text-primary-2 transition-colors duration-200 ease-in-out"
-              onClick={() => openModal({ type: "createTaskType" })}
+              onClick={() => openModal({ type: "manageTaskTypes" })}
             >
-              + Add task type
+              Manage task types
             </button>
           )}
           {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (

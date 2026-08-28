@@ -7,6 +7,7 @@ export type ModalPayload =
   | { type: "viewTask"; data: { taskId: string } }
   | { type: "viewMembers" }
   | { type: "inviteMember" }
+  | { type: "manageTaskTypes" }
   | { type: "createTaskType" }
   | { type: null };
 
