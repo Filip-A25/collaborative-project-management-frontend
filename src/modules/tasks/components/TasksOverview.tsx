@@ -21,14 +21,24 @@ export const TasksOverview = () => {
     <div className="w-full max-xl:order-2">
       <header className="flex justify-between">
         <h3 className="text-primary-dark-1 md:text-sm">Tasks</h3>
-        {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
-          <button
-            className="cursor-pointer text-xs text-white rounded-full px-2 bg-primary-2/70 hover:bg-primary-1 transition-colors duration-200 ease-in-out"
-            onClick={handleOpenCreateModal}
-          >
-            + Add task
-          </button>
-        )}
+        <div className="flex gap-2">
+          {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
+            <button
+              className="cursor-pointer text-xs text-primary-2/70 rounded-full px-2 border border-primary-2/70 hover:border-primary-1 hover:text-primary-2 transition-colors duration-200 ease-in-out"
+              onClick={() => openModal({ type: "manageTaskTypes" })}
+            >
+              Manage task types
+            </button>
+          )}
+          {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
+            <button
+              className="cursor-pointer text-xs text-white rounded-full px-2 bg-primary-2/80 hover:bg-primary-1 transition-colors duration-200 ease-in-out"
+              onClick={handleOpenCreateModal}
+            >
+              + Add task
+            </button>
+          )}
+        </div>
       </header>
       <div className="border rounded-md overflow-hidden mt-2 border-muted-1/30">
         {Boolean(tasks.length) ? (

@@ -17,12 +17,14 @@ interface Props {
   taskData: Task;
   projectData: Project;
   closeTaskModalFn: VoidFunction;
+  taskTypes: TaskType[];
 }
 
 export const UpdateTaskForm = ({
   taskData,
   projectData,
   closeTaskModalFn,
+  taskTypes,
 }: Props) => {
   const { updateCurrentTask } = useTasks();
 
@@ -140,6 +142,27 @@ export const UpdateTaskForm = ({
                 (status) => status.value === field.value,
               )}
               onChange={(selected) => field.onChange(selected?.value)}
+              classNames={formSelectStyling}
+              className="md:min-w-[420px] md:w-1/2"
+            />
+          )}
+        />
+      </div>
+      <div className="mt-4">
+        <label htmlFor="status" className="text-sm text-primary-dark-1">
+          Type
+        </label>
+        <Controller
+          name="type"
+          control={control}
+          render={({ field }) => (
+            <Select
+              instanceId="type-select"
+              options={taskTypes}
+              getOptionLabel={(selected) => selected.title}
+              getOptionValue={(selected) => selected.id.toString()}
+              value={taskTypes.find((status) => status.id === field.value)}
+              onChange={(selected) => field.onChange(selected?.id)}
               classNames={formSelectStyling}
               className="md:min-w-[420px] md:w-1/2"
             />

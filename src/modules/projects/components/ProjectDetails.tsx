@@ -29,6 +29,8 @@ import { TaskInfoCard } from "@/modules/tasks/components/TaskInfoCard";
 import { UpdateTaskForm } from "@/modules/tasks/components/UpdateTaskForm";
 import { useTaskStore } from "@/modules/tasks/store/taskStore";
 import { CreateInviteForm } from "./CreateInviteForm";
+import { CreateTaskTypeForm } from "@/modules/tasks/components/CreateTaskTypeForm";
+import { TaskTypesList } from "@/modules/tasks/components/TaskTypesList";
 
 interface Props {
   project: Project;
@@ -45,6 +47,8 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
   const closeModalFn = useModalStore((store) => store.closeModal);
   const openModal = useModalStore((store) => store.openModal);
   const setTasks = useTaskStore((store) => store.setTasks);
+  const setTaskTypes = useTaskStore((store) => store.setTaskTypes);
+  const allTaskTypes = useTaskStore((store) => store.taskTypes);
 
   const sidebarItem = sidebarItems.find((item) => item.name === "Projects");
   const projectStatus =
@@ -81,6 +85,10 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
   useEffect(() => {
     setTasks(tasks);
   }, [tasks, setTasks]);
+
+  useEffect(() => {
+    setTaskTypes(taskTypes);
+  }, [taskTypes, setTaskTypes]);
 
   return (
     <>
@@ -194,6 +202,7 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
           <CreateTaskForm
             projectData={project}
             closeTaskModalFn={handleCloseModal}
+            taskTypes={allTaskTypes}
           />
         </ModalPortal>
       )}
@@ -207,6 +216,7 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
             taskData={modalPayload.data.task}
             projectData={project}
             closeTaskModalFn={handleCloseModal}
+            taskTypes={allTaskTypes}
           />
         </ModalPortal>
       )}
@@ -228,6 +238,24 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
           wrapperStyling="mx-3 px-8 py-4 md:w-[500px] overflow-scroll flex flex-col"
         >
           <CreateInviteForm projectId={project.id} roles={project.roles} />
+        </ModalPortal>
+      )}
+      {modalPayload.type === "createTaskType" && (
+        <ModalPortal
+          closeFn={handleCloseModal}
+          headingText="Create a task type"
+          wrapperStyling="mx-3 px-8 py-4 w-full md:w-[500px] overflow-scroll flex flex-col"
+        >
+          <CreateTaskTypeForm projectId={project.id} />
+        </ModalPortal>
+      )}
+      {modalPayload.type === "manageTaskTypes" && (
+        <ModalPortal
+          closeFn={handleCloseModal}
+          headingText="Task types"
+          wrapperStyling="max-md:w-full mx-4 px-4 md:px-6 py-3 min-w-[420px] max-w-[600px]"
+        >
+          <TaskTypesList projectId={project.id} />
         </ModalPortal>
       )}
     </>
