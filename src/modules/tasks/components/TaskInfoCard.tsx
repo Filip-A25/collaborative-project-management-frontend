@@ -10,10 +10,12 @@ import { useTasks } from "../hooks/useTasks";
 import { useTaskStore } from "../store/taskStore";
 import { useProjectAuthorization } from "@/modules/projects/hooks/useProjectAuthorization";
 import { PermissionName } from "@/modules/projects/types/permissionName";
+import { ModalPortal } from "@/shared/ui/ModalPortal";
 
 interface Props {
   projectId: string;
   taskId: string;
+  handleCloseModal: VoidFunction;
 }
 
 const getLabelColorStyling = (color: string) => {
@@ -37,7 +39,11 @@ const getLabelColorStyling = (color: string) => {
   }
 };
 
-export const TaskInfoCard = ({ projectId, taskId }: Props) => {
+export const TaskInfoCard = ({
+  projectId,
+  taskId,
+  handleCloseModal,
+}: Props) => {
   const openModal = useModalStore((store) => store.openModal);
   const allTasks = useTaskStore((store) => store.tasks);
 
@@ -63,113 +69,118 @@ export const TaskInfoCard = ({ projectId, taskId }: Props) => {
     : "";
 
   return (
-    <div className="flex flex-col">
-      <h3 className="text-primary-dark-1/80 font-medium text-xl mb-2">
-        {task.title}
-      </h3>
-      {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
-        <div className="flex gap-2">
-          <button
-            className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 hover:text-primary-2"
-            onClick={() => openModal({ type: "updateTask", data: { task } })}
-          >
-            <EditIcon
-              sx={{ fontSize: 16 }}
-              className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
-            />
-            Edit
-          </button>
-          <button
-            className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 hover:text-red-500"
-            onClick={() => deleteCurrentTask(projectId, taskId)}
-          >
-            <DeleteForever
-              sx={{ fontSize: 16 }}
-              className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
-            />
-            Delete
-          </button>
-        </div>
-      )}
-      <div className="flex flex-col h-full">
-        <div className="flex flex-col gap-4 mt-6 mb-8 text-sm">
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Created</p>
-            <p className="text-primary-dark-1">
-              {format(task.createdAt, "PPpp")}
-            </p>
-          </article>
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Updated</p>
-            <p className="text-primary-dark-1">
-              {format(task.updatedAt, "PPpp")}
-            </p>
-          </article>
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Priority</p>
-            {taskPriority && (
-              <p
-                className={clsx(
-                  "text-xs border rounded-full px-2 w-fit",
-                  getLabelColorStyling(taskPriority.color),
-                )}
-              >
-                {taskPriority.label}
-              </p>
-            )}
-          </article>
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Status</p>
-            {taskStatus && (
-              <p
-                className={clsx(
-                  "text-xs border rounded-full px-2 w-fit",
-                  getLabelColorStyling(taskStatus.color),
-                )}
-              >
-                {taskStatus.label}
-              </p>
-            )}
-          </article>
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Assigned to</p>
-            {assignedToFullName && (
-              <p className=" text-primary-dark-1">{assignedToFullName}</p>
-            )}
-          </article>
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Created by</p>
-            {createdByFullName && (
-              <p className="text-primary-dark-1">{createdByFullName}</p>
-            )}
-          </article>
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Type</p>
-            {task.type && (
-              <p className="text-primary-dark-1">{task.type.title}</p>
-            )}
-          </article>
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Start date</p>
-            {task.startDate && (
+    <ModalPortal
+      closeFn={handleCloseModal}
+      wrapperStyling="mx-3 px-8 py-4 md:h-[90vh] md:max-h-[620px] md:w-[500px] overflow-scroll flex flex-col"
+    >
+      <div className="flex flex-col">
+        <h3 className="text-primary-dark-1/80 font-medium text-xl mb-2">
+          {task.title}
+        </h3>
+        {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
+          <div className="flex gap-2">
+            <button
+              className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 hover:text-primary-2"
+              onClick={() => openModal({ type: "updateTask", data: { task } })}
+            >
+              <EditIcon
+                sx={{ fontSize: 16 }}
+                className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
+              />
+              Edit
+            </button>
+            <button
+              className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 hover:text-red-500"
+              onClick={() => deleteCurrentTask(projectId, taskId)}
+            >
+              <DeleteForever
+                sx={{ fontSize: 16 }}
+                className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
+              />
+              Delete
+            </button>
+          </div>
+        )}
+        <div className="flex flex-col h-full">
+          <div className="flex flex-col gap-4 mt-6 mb-8 text-sm">
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Created</p>
               <p className="text-primary-dark-1">
-                {format(task.startDate, "PP")}
+                {format(task.createdAt, "PPpp")}
               </p>
-            )}
-          </article>
-          <article className="grid grid-cols-2 gap-4">
-            <p className="text-muted-1 col-span-1">Due date</p>
-            {task.dueDate && (
+            </article>
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Updated</p>
               <p className="text-primary-dark-1">
-                {format(task.dueDate, "PP")}
+                {format(task.updatedAt, "PPpp")}
               </p>
-            )}
-          </article>
-        </div>
-        <div className="flex flex-col flex-1">
-          <p className="text-sm text-primary-dark-1">{task.description}</p>
+            </article>
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Priority</p>
+              {taskPriority && (
+                <p
+                  className={clsx(
+                    "text-xs border rounded-full px-2 w-fit",
+                    getLabelColorStyling(taskPriority.color),
+                  )}
+                >
+                  {taskPriority.label}
+                </p>
+              )}
+            </article>
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Status</p>
+              {taskStatus && (
+                <p
+                  className={clsx(
+                    "text-xs border rounded-full px-2 w-fit",
+                    getLabelColorStyling(taskStatus.color),
+                  )}
+                >
+                  {taskStatus.label}
+                </p>
+              )}
+            </article>
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Assigned to</p>
+              {assignedToFullName && (
+                <p className=" text-primary-dark-1">{assignedToFullName}</p>
+              )}
+            </article>
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Created by</p>
+              {createdByFullName && (
+                <p className="text-primary-dark-1">{createdByFullName}</p>
+              )}
+            </article>
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Type</p>
+              {task.type && (
+                <p className="text-primary-dark-1">{task.type.title}</p>
+              )}
+            </article>
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Start date</p>
+              {task.startDate && (
+                <p className="text-primary-dark-1">
+                  {format(task.startDate, "PP")}
+                </p>
+              )}
+            </article>
+            <article className="grid grid-cols-2 gap-4">
+              <p className="text-muted-1 col-span-1">Due date</p>
+              {task.dueDate && (
+                <p className="text-primary-dark-1">
+                  {format(task.dueDate, "PP")}
+                </p>
+              )}
+            </article>
+          </div>
+          <div className="flex flex-col flex-1">
+            <p className="text-sm text-primary-dark-1">{task.description}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 };

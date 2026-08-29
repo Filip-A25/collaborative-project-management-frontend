@@ -10,7 +10,6 @@ import { ProjectInfoGrid } from "./ProjectInfoGrid";
 import { ProjectMembersList } from "./ProjectMembersList";
 import { DeleteForever, PersonAdd, ExitToApp } from "@mui/icons-material";
 import { useProjects } from "../hooks/useProjects";
-import { ProjectMembersModal } from "./ProjectMembersModal";
 import { useMemberStore } from "../stores/memberStore";
 import { useAuthStore } from "@/modules/auth/authStore";
 import { useEffect, useState } from "react";
@@ -22,15 +21,18 @@ import { useProjectAuthorization } from "../hooks/useProjectAuthorization";
 import { PermissionName } from "../types/permissionName";
 import { TasksOverview } from "@/modules/tasks/components/TasksOverview";
 import { Task } from "@/modules/tasks/types/task";
-import { ModalPortal } from "@/shared/ui/ModalPortal";
-import { CreateTaskForm } from "@/modules/tasks/components/CreateTaskForm";
 import { useModalStore } from "@/shared/stores/modalStore";
-import { TaskInfoCard } from "@/modules/tasks/components/TaskInfoCard";
-import { UpdateTaskForm } from "@/modules/tasks/components/UpdateTaskForm";
 import { useTaskStore } from "@/modules/tasks/store/taskStore";
-import { CreateInviteForm } from "./CreateInviteForm";
-import { CreateTaskTypeForm } from "@/modules/tasks/components/CreateTaskTypeForm";
-import { TaskTypesList } from "@/modules/tasks/components/TaskTypesList";
+import { ProjectModalsContainer } from "./ProjectModalsContainer";
+import dynamic from "next/dynamic";
+
+const ProjectMembersModal = dynamic(
+  () =>
+    import("./ProjectMembersModal").then(
+      (module) => module.ProjectMembersModal,
+    ),
+  { ssr: false },
+);
 
 interface Props {
   project: Project;
@@ -48,7 +50,6 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
   const openModal = useModalStore((store) => store.openModal);
   const setTasks = useTaskStore((store) => store.setTasks);
   const setTaskTypes = useTaskStore((store) => store.setTaskTypes);
-  const allTaskTypes = useTaskStore((store) => store.taskTypes);
 
   const sidebarItem = sidebarItems.find((item) => item.name === "Projects");
   const projectStatus =
@@ -184,80 +185,14 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
         </section>
       </section>
       {projectMembers && modalPayload.type === "viewMembers" && (
-        <div className="relative w-full h-full bg-black/20">
-          <ProjectMembersModal
-            closeModal={handleCloseModal}
-            members={projectMembers}
-            projectId={project.id}
-            handleRemovedMember={handleRemovedMember}
-          />
-        </div>
+        <ProjectMembersModal
+          closeModal={handleCloseModal}
+          members={projectMembers}
+          projectId={project.id}
+          handleRemovedMember={handleRemovedMember}
+        />
       )}
-      {modalPayload.type === "createTask" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText="Create task"
-          wrapperStyling="md:py-8 md:h-[90vh] md:px-10 overflow-scroll"
-        >
-          <CreateTaskForm
-            projectData={project}
-            closeTaskModalFn={handleCloseModal}
-            taskTypes={allTaskTypes}
-          />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "updateTask" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText={`Update ${modalPayload.data.task.title}`}
-          wrapperStyling="md:py-8 md:h-[90vh] md:w-[500px] md:px-10 overflow-scroll"
-        >
-          <UpdateTaskForm
-            taskData={modalPayload.data.task}
-            projectData={project}
-            closeTaskModalFn={handleCloseModal}
-            taskTypes={allTaskTypes}
-          />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "viewTask" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          wrapperStyling="mx-3 px-8 py-4 md:h-[90vh] md:max-h-[620px] md:w-[500px] overflow-scroll flex flex-col"
-        >
-          <TaskInfoCard
-            projectId={project.id}
-            taskId={modalPayload.data.taskId}
-          />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "inviteMember" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText="Invite a user to the project"
-          wrapperStyling="mx-3 px-8 py-4 md:w-[500px] overflow-scroll flex flex-col"
-        >
-          <CreateInviteForm projectId={project.id} roles={project.roles} />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "createTaskType" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText="Create a task type"
-          wrapperStyling="mx-3 px-8 py-4 w-full md:w-[500px] overflow-scroll flex flex-col"
-        >
-          <CreateTaskTypeForm projectId={project.id} />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "manageTaskTypes" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText="Task types"
-          wrapperStyling="max-md:w-full mx-4 px-4 md:px-6 py-3 min-w-[420px] max-w-[600px]"
-        >
-          <TaskTypesList projectId={project.id} />
-        </ModalPortal>
-      )}
+      <ProjectModalsContainer project={project} />
     </>
   );
 };
