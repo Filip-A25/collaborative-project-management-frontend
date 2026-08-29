@@ -5,6 +5,8 @@ import { MobileBar } from "@/shared/ui/MobileBar";
 import { MobileNav } from "@/shared/ui/MobileNav";
 import { CreateProjectButton } from "@/modules/projects/components/CreateProjectButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function PrivateLayout({
   children,
 }: {
