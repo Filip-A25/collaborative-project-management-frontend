@@ -44,7 +44,7 @@ export const CreateInviteFormModal = ({
     <ModalPortal
       closeFn={handleCloseModal}
       headingText="Invite a user to the project"
-      wrapperStyling="mx-3 px-8 py-4 md:w-[500px] overflow-scroll flex flex-col"
+      wrapperStyling="mx-3 px-8 py-4 w-full md:w-[500px] overflow-scroll flex flex-col"
     >
       <form>
         <Input

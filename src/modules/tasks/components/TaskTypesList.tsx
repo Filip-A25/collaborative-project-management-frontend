@@ -32,7 +32,7 @@ export const TaskTypesList = ({ projectId, handleCloseModal }: Props) => {
     <ModalPortal
       closeFn={handleCloseModal}
       headingText="Task types"
-      wrapperStyling="max-md:w-full mx-4 px-4 md:px-6 py-3 min-w-[420px] max-w-[600px]"
+      wrapperStyling="max-md:w-full max-md:mx-3 px-8 md:px-6 py-4 min-w-[400px] max-w-[600px]"
     >
       <ul>
         {taskTypes.map((type) => (
@@ -62,7 +62,7 @@ export const TaskTypesList = ({ projectId, handleCloseModal }: Props) => {
         ))}
         <button
           onClick={() => openModal({ type: "createTaskType" })}
-          className="flex gap-1 cursor-pointer group mt-4 px-2 justify-center rounded-lg max-md:border-primary-1 max-md:text-primary-1 border md:hover:border-primary-1 md:border-muted-1 outline-none items-end max-md:hover:border-primary-1 py-1 max-md:mt-3 text-xs text-muted-1 hover:text-primary-1"
+          className="flex gap-1 cursor-pointer group mt-4 px-2 justify-center rounded-lg bg-primary-1/80 hover:bg-primary-1 shadow-md shadow-muted-1/20 max-md:text-primary-1 outline-none items-end py-1 max-md:mt-3 text-xs text-white transition-colors duration-200 ease-in-out"
         >
           + Add task type
         </button>

@@ -25,7 +25,7 @@ export const ModalPortal = ({
         >
           <h2 className="text-muted-1">{headingText}</h2>
           <button onClick={closeFn} className="cursor-pointer">
-            <Close className="text-muted-1" />
+            <Close className="text-muted-1" fontSize="small" />
           </button>
         </div>
         {children}

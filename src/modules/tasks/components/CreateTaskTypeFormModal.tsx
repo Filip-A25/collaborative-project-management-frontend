@@ -36,7 +36,7 @@ export const CreateTaskTypeFormModal = ({
     <ModalPortal
       closeFn={handleCloseModal}
       headingText="Create a task type"
-      wrapperStyling="mx-3 px-8 py-4 w-full md:w-[500px] overflow-scroll flex flex-col"
+      wrapperStyling="max-md:mx-3 px-8 py-4 w-full md:w-[500px] overflow-scroll flex flex-col"
     >
       <form>
         <Input

@@ -80,23 +80,17 @@ export const TaskInfoCard = ({
         {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
           <div className="flex gap-2">
             <button
-              className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 hover:text-primary-2"
+              className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg bg-primary-1/80 hover:bg-primary-1 text-white outline-none items-center py-0.5 px-2  text-xs font-semibold leading-tight transition-colors duration-200 ease-in-out"
               onClick={() => openModal({ type: "updateTask", data: { task } })}
             >
-              <EditIcon
-                sx={{ fontSize: 16 }}
-                className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
-              />
+              <EditIcon sx={{ fontSize: 16 }} className="text-white" />
               Edit
             </button>
             <button
-              className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg px-2 py-0.5 text-xs text-muted-1 max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 hover:text-red-500"
+              className="flex gap-1 cursor-pointer group w-fit justify-center rounded-lg bg-red-500/80 hover:bg-red-500 text-white outline-none items-center py-0.5 px-2  text-xs font-semibold leading-tight transition-colors duration-200 ease-in-out"
               onClick={() => deleteCurrentTask(projectId, taskId)}
             >
-              <DeleteForever
-                sx={{ fontSize: 16 }}
-                className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
-              />
+              <DeleteForever sx={{ fontSize: 16 }} className="text-white" />
               Delete
             </button>
           </div>

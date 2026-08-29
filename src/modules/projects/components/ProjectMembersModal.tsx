@@ -44,7 +44,7 @@ export const ProjectMembersModal = ({
       <ModalPortal
         closeFn={closeModal}
         headingText={`Members (${members.length})`}
-        wrapperStyling="max-md:w-full mx-4 px-4 md:px-6 py-3 max-w-[600px]"
+        wrapperStyling="max-md:w-full max-md:mx-3 px-4 md:px-6 py-4 max-w-[600px]"
       >
         <ul>
           {members.map((member) => {

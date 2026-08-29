@@ -121,29 +121,27 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
             </p>
           </div>
           <div className="flex flex-col md:min-w-[140px] lg:min-w-[180px] xl:min-w-[200px]">
-            <CompletionProgress
-              completionPercentage={project.completionPercentage}
-            />
-            <div className="flex flex-col sm:flex-row sm:gap-2 md:grid md:grid-cols-2">
+            <CompletionProgress />
+            <div className="grid grid-cols-2 gap-x-2 md:gap-1.5">
               {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
                 <>
                   <Link
-                    className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg  max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-primary-2"
+                    className="flex gap-1 cursor-pointer group w-full justify-center items-center rounded-lg bg-primary-1/80 hover:bg-primary-1 font-semibold text-white outline-none max-md:py-2 py-1 max-md:mt-3 text-xs leading-tight transition-colors duration-200 ease-in-out"
                     href={editRoute}
                   >
                     <EditIcon
-                      fontSize="small"
-                      className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
+                      sx={{ fontSize: "16px" }}
+                      className="text-white"
                     />
                     Edit
                   </Link>
                   <button
-                    className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-red-500"
+                    className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg bg-red-500/80 hover:bg-red-500 text-white outline-none items-center max-md:py-2 py-1 max-md:mt-3 text-xs font-semibold leading-tight transition-colors duration-200 ease-in-out"
                     onClick={() => deleteProjectWithId(project.id)}
                   >
                     <DeleteForever
-                      fontSize="small"
-                      className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
+                      sx={{ fontSize: "16px" }}
+                      className="text-white"
                     />
                     Delete
                   </button>
@@ -151,34 +149,28 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
               )}
               {doesUserHaveProjectPermission(PermissionName.InviteMembers) && (
                 <button
-                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 md:border-muted-1 outline-none items-end max-md:hover:border-primary-2 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-primary-2"
+                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg bg-primary-dark-1/80 hover:bg-primary-dark-1 text-white outline-none items-center max-md:py-2 py-1 max-md:mt-3 text-xs font-semibold leading-tight transition-colors duration-200 ease-in-out"
                   onClick={() => openModal({ type: "inviteMember" })}
                 >
-                  <PersonAdd
-                    fontSize="small"
-                    className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
-                  />
+                  <PersonAdd sx={{ fontSize: "18px" }} className="text-white" />
                   Add member
                 </button>
               )}
               {member && !Boolean(member.projectRole?.isCreatorRole) && (
                 <button
-                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg max-md:border-red-600 max-md:text-red-600 border md:hover:border-red-600 md:border-muted-1 outline-none items-end max-md:hover:border-red-600 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-red-600"
+                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg bg-red-500/80 hover:bg-red-500 text-white outline-none items-center max-md:py-2 py-1 max-md:mt-3 text-xs font-semibold leading-tight transition-colors duration-200 ease-in-out"
                   onClick={() => removeMember(project.id, member?.id)}
                 >
-                  <ExitToApp
-                    fontSize="small"
-                    className="max-md:text-red-600 text-muted-1 group-hover:text-red-600"
-                  />
+                  <ExitToApp sx={{ fontSize: "18px" }} className="text-white" />
                   Leave project
                 </button>
               )}
             </div>
           </div>
         </header>
-        <section className="flex flex-col gap-6 mt-8 md:gap-0 md:mt-8 md:items-end">
+        <section className="flex flex-col gap-10 mt-8 md:gap-0 md:mt-8 md:items-end">
           <ProjectInfoGrid project={project} />
-          <div className="flex max-xl:flex-col md:w-full gap-4 md:mt-8">
+          <div className="flex max-xl:flex-col md:w-full max-md:gap-12 gap-4 md:mt-8">
             <TasksOverview />
             {projectMembers && <ProjectMembersList members={projectMembers} />}
           </div>
