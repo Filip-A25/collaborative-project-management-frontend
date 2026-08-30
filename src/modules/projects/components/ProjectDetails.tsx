@@ -10,7 +10,6 @@ import { ProjectInfoGrid } from "./ProjectInfoGrid";
 import { ProjectMembersList } from "./ProjectMembersList";
 import { DeleteForever, PersonAdd, ExitToApp } from "@mui/icons-material";
 import { useProjects } from "../hooks/useProjects";
-import { ProjectMembersModal } from "./ProjectMembersModal";
 import { useMemberStore } from "../stores/memberStore";
 import { useAuthStore } from "@/modules/auth/authStore";
 import { useEffect, useState } from "react";
@@ -22,15 +21,18 @@ import { useProjectAuthorization } from "../hooks/useProjectAuthorization";
 import { PermissionName } from "../types/permissionName";
 import { TasksOverview } from "@/modules/tasks/components/TasksOverview";
 import { Task } from "@/modules/tasks/types/task";
-import { ModalPortal } from "@/shared/ui/ModalPortal";
-import { CreateTaskForm } from "@/modules/tasks/components/CreateTaskForm";
 import { useModalStore } from "@/shared/stores/modalStore";
-import { TaskInfoCard } from "@/modules/tasks/components/TaskInfoCard";
-import { UpdateTaskForm } from "@/modules/tasks/components/UpdateTaskForm";
 import { useTaskStore } from "@/modules/tasks/store/taskStore";
-import { CreateInviteForm } from "./CreateInviteForm";
-import { CreateTaskTypeForm } from "@/modules/tasks/components/CreateTaskTypeForm";
-import { TaskTypesList } from "@/modules/tasks/components/TaskTypesList";
+import { ProjectModalsContainer } from "./ProjectModalsContainer";
+import dynamic from "next/dynamic";
+
+const ProjectMembersModal = dynamic(
+  () =>
+    import("./ProjectMembersModal").then(
+      (module) => module.ProjectMembersModal,
+    ),
+  { ssr: false },
+);
 
 interface Props {
   project: Project;
@@ -48,7 +50,6 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
   const openModal = useModalStore((store) => store.openModal);
   const setTasks = useTaskStore((store) => store.setTasks);
   const setTaskTypes = useTaskStore((store) => store.setTaskTypes);
-  const allTaskTypes = useTaskStore((store) => store.taskTypes);
 
   const sidebarItem = sidebarItems.find((item) => item.name === "Projects");
   const projectStatus =
@@ -120,29 +121,27 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
             </p>
           </div>
           <div className="flex flex-col md:min-w-[140px] lg:min-w-[180px] xl:min-w-[200px]">
-            <CompletionProgress
-              completionPercentage={project.completionPercentage}
-            />
-            <div className="flex flex-col sm:flex-row sm:gap-2 md:grid md:grid-cols-2">
+            <CompletionProgress />
+            <div className="grid grid-cols-2 gap-x-2 md:gap-1.5">
               {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
                 <>
                   <Link
-                    className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg  max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 border-muted-1 outline-none items-end max-md:hover:border-primary-2 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-primary-2"
+                    className="flex gap-1 cursor-pointer group w-full justify-center items-center rounded-lg bg-primary-1/80 hover:bg-primary-1 font-semibold text-white outline-none max-md:py-2 py-1 max-md:mt-3 text-xs leading-tight transition-colors duration-200 ease-in-out"
                     href={editRoute}
                   >
                     <EditIcon
-                      fontSize="small"
-                      className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
+                      sx={{ fontSize: "16px" }}
+                      className="text-white"
                     />
                     Edit
                   </Link>
                   <button
-                    className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg max-md:border-red-500 max-md:text-red-500 border md:hover:border-red-500 md:border-muted-1 outline-none items-end max-md:hover:border-red-500 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-red-500"
+                    className="flex gap-1 cursor-pointer group w-full justify-center rounded-lg bg-red-500/80 hover:bg-red-500 text-white outline-none items-center max-md:py-2 py-1 max-md:mt-3 text-xs font-semibold leading-tight transition-colors duration-200 ease-in-out"
                     onClick={() => deleteProjectWithId(project.id)}
                   >
                     <DeleteForever
-                      fontSize="small"
-                      className="max-md:text-red-500 text-muted-1 group-hover:text-red-500"
+                      sx={{ fontSize: "16px" }}
+                      className="text-white"
                     />
                     Delete
                   </button>
@@ -150,114 +149,42 @@ export const ProjectDetails = ({ project, tasks, taskTypes }: Props) => {
               )}
               {doesUserHaveProjectPermission(PermissionName.InviteMembers) && (
                 <button
-                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg max-md:border-primary-2 max-md:text-primary-2 border md:hover:border-primary-2 md:border-muted-1 outline-none items-end max-md:hover:border-primary-2 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-primary-2"
+                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg bg-primary-dark-1/80 hover:bg-primary-dark-1 text-white outline-none items-center max-md:py-2 py-1 max-md:mt-3 text-xs font-semibold leading-tight transition-colors duration-200 ease-in-out"
                   onClick={() => openModal({ type: "inviteMember" })}
                 >
-                  <PersonAdd
-                    fontSize="small"
-                    className="max-md:text-primary-2 text-muted-1 group-hover:text-primary-2"
-                  />
+                  <PersonAdd sx={{ fontSize: "18px" }} className="text-white" />
                   Add member
                 </button>
               )}
               {member && !Boolean(member.projectRole?.isCreatorRole) && (
                 <button
-                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg max-md:border-red-600 max-md:text-red-600 border md:hover:border-red-600 md:border-muted-1 outline-none items-end max-md:hover:border-red-600 py-0.5 max-md:mt-3 text-xs text-muted-1 hover:text-red-600"
+                  className="flex gap-1 col-span-2 cursor-pointer group w-full justify-center rounded-lg bg-red-500/80 hover:bg-red-500 text-white outline-none items-center max-md:py-2 py-1 max-md:mt-3 text-xs font-semibold leading-tight transition-colors duration-200 ease-in-out"
                   onClick={() => removeMember(project.id, member?.id)}
                 >
-                  <ExitToApp
-                    fontSize="small"
-                    className="max-md:text-red-600 text-muted-1 group-hover:text-red-600"
-                  />
+                  <ExitToApp sx={{ fontSize: "18px" }} className="text-white" />
                   Leave project
                 </button>
               )}
             </div>
           </div>
         </header>
-        <section className="flex flex-col gap-6 mt-8 md:gap-0 md:mt-8 md:items-end">
+        <section className="flex flex-col gap-10 mt-8 md:gap-0 md:mt-8 md:items-end">
           <ProjectInfoGrid project={project} />
-          <div className="flex max-xl:flex-col md:w-full gap-4 md:mt-8">
+          <div className="flex max-xl:flex-col md:w-full max-md:gap-12 gap-4 md:mt-8">
             <TasksOverview />
             {projectMembers && <ProjectMembersList members={projectMembers} />}
           </div>
         </section>
       </section>
       {projectMembers && modalPayload.type === "viewMembers" && (
-        <div className="relative w-full h-full bg-black/20">
-          <ProjectMembersModal
-            closeModal={handleCloseModal}
-            members={projectMembers}
-            projectId={project.id}
-            handleRemovedMember={handleRemovedMember}
-          />
-        </div>
+        <ProjectMembersModal
+          closeModal={handleCloseModal}
+          members={projectMembers}
+          projectId={project.id}
+          handleRemovedMember={handleRemovedMember}
+        />
       )}
-      {modalPayload.type === "createTask" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText="Create task"
-          wrapperStyling="md:py-8 md:h-[90vh] md:px-10 overflow-scroll"
-        >
-          <CreateTaskForm
-            projectData={project}
-            closeTaskModalFn={handleCloseModal}
-            taskTypes={allTaskTypes}
-          />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "updateTask" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText={`Update ${modalPayload.data.task.title}`}
-          wrapperStyling="md:py-8 md:h-[90vh] md:w-[500px] md:px-10 overflow-scroll"
-        >
-          <UpdateTaskForm
-            taskData={modalPayload.data.task}
-            projectData={project}
-            closeTaskModalFn={handleCloseModal}
-            taskTypes={allTaskTypes}
-          />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "viewTask" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          wrapperStyling="mx-3 px-8 py-4 md:h-[90vh] md:max-h-[620px] md:w-[500px] overflow-scroll flex flex-col"
-        >
-          <TaskInfoCard
-            projectId={project.id}
-            taskId={modalPayload.data.taskId}
-          />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "inviteMember" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText="Invite a user to the project"
-          wrapperStyling="mx-3 px-8 py-4 md:w-[500px] overflow-scroll flex flex-col"
-        >
-          <CreateInviteForm projectId={project.id} roles={project.roles} />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "createTaskType" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText="Create a task type"
-          wrapperStyling="mx-3 px-8 py-4 w-full md:w-[500px] overflow-scroll flex flex-col"
-        >
-          <CreateTaskTypeForm projectId={project.id} />
-        </ModalPortal>
-      )}
-      {modalPayload.type === "manageTaskTypes" && (
-        <ModalPortal
-          closeFn={handleCloseModal}
-          headingText="Task types"
-          wrapperStyling="max-md:w-full mx-4 px-4 md:px-6 py-3 min-w-[420px] max-w-[600px]"
-        >
-          <TaskTypesList projectId={project.id} />
-        </ModalPortal>
-      )}
+      <ProjectModalsContainer project={project} />
     </>
   );
 };

@@ -22,13 +22,11 @@ export const ProjectCard = ({ data }: Props) => {
   const fullCreatorName =
     projectCreator?.firstName + " " + projectCreator?.lastName;
 
-  const completionProgress = `${data.completionPercentage}% Completed`;
-
   return (
     <article className="bg-white rounded-lg">
       <Link
         href={`${PRIVATE_ROUTES.Projects}/${data.id}`}
-        className="flex flex-col w-full h-full items-start cursor-pointer rounded-lg px-6 py-4 gap-4 min-h-[200px] md:h-[320px] xl:h-[350px] md:gap-0 md:px-8 md:py-5 text-primary-dark-1 border border-gray-200 hover:border-gray-300 hover:shadow-md focus:shadow-md [--tw-shadow-color:rgb(0,0,0,0.03)] transition-all duration-200 ease-in-out"
+        className="flex flex-col w-full h-full items-start cursor-pointer rounded-lg px-6 py-4 gap-4 min-h-[200px] md:h-[300px] xl:h-[350px] md:gap-0 md:px-8 md:py-5 text-primary-dark-1 border border-gray-200 hover:border-gray-300 hover:shadow-md focus:shadow-md [--tw-shadow-color:rgb(0,0,0,0.03)] transition-all duration-200 ease-in-out"
       >
         <header className="flex justify-between items-start gap-2 w-full xl:h-16">
           <h3 className="text-xl font-semibold md:text-2xl md:font-medium text-start line-clamp-2">
@@ -46,17 +44,7 @@ export const ProjectCard = ({ data }: Props) => {
         <p className="hidden md:block md:mt-4 md:mb-2 md:text-xs text-start md:line-clamp-4 line-clamp-3">
           {data.description}
         </p>
-        <div className="w-full md:mt-auto md:w-unset">
-          <div className="flex items-center gap-4">
-            <progress
-              value={data.completionPercentage}
-              max={100}
-              className="rounded-full overflow-hidden w-2/3 h-2 md:mt-4 md:mb-4 [&::-webkit-progress-bar]:bg-muted-1/20 [&::-webkit-progress-value]:bg-primary-2"
-            />
-            <p className="text-xs text-primary-dark-1/60 text-start">
-              {completionProgress}
-            </p>
-          </div>
+        <div className="w-full md:w-unset">
           <div className="flex w-full gap-12 mt-4 md:mt-0 md:w-fit md:gap-10 md:py-4">
             <span>
               <p className="text-xs text-start opacity-50">Start date</p>

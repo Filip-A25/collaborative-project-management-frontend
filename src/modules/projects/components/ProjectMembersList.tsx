@@ -30,7 +30,7 @@ export const ProjectMembersList = ({ members }: Props) => {
           View all
         </button>
       </div>
-      <ul className="rounded-lg flex flex-col gap-6 mt-2 px-4 py-4 md:w-60 md:min-h-40 border border-muted-1/30 bg-white">
+      <ul className="rounded-lg flex flex-col gap-6 mt-2 px-4 py-4 md:w-60 md:min-h-40 border border-muted-1/30 bg-white shadow-md shadow-muted-1/10">
         {members.map((member) => {
           const fullMemberName = `${member.firstName} ${member.lastName}`;
           return (

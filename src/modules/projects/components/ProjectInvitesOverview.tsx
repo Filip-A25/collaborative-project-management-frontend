@@ -38,7 +38,7 @@ export const ProjectInvitesOverview = ({ invites }: Props) => {
         />
       )}
       <section className="flex flex-col gap-4 px-4 mt-24 pb-20 md:pl-0 md:mt-12">
-        <table className="max-md:hidden w-full h-full rounded-lg bg-white px-2 table-fixed">
+        <table className="max-md:hidden w-full h-full bg-white px-2 table-fixed rounded-t-lg overflow-hidden">
           <colgroup>
             <col className="w-1/4" />
             <col className="w-1/4" />
@@ -46,12 +46,13 @@ export const ProjectInvitesOverview = ({ invites }: Props) => {
             <col className="w-1/4" />
           </colgroup>
           <thead>
-            <tr className="text-left ml-10 border-b border-muted-1/30">
+            <tr className="text-left ml-10 border-b border-muted-1/30 bg-muted-1/15">
               <th className="py-2 pl-3 pr-2 font-medium text-muted-1 text-sm">
                 Project
               </th>
               <th className="font-medium text-muted-1 text-sm pr-2">Inviter</th>
               <th className="font-medium text-muted-1 text-sm pr-2">Expires</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -84,6 +85,8 @@ export const ProjectInvitesOverview = ({ invites }: Props) => {
             })}
           </tbody>
         </table>
+
+        <p className="text-muted-1 text-sm mx-auto mt-6">No invites found.</p>
 
         <div className="md:hidden">
           {allInvites.map((invite) => (

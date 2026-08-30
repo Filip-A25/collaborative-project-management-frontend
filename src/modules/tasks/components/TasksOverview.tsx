@@ -20,11 +20,13 @@ export const TasksOverview = () => {
   return (
     <div className="w-full max-xl:order-2">
       <header className="flex justify-between">
-        <h3 className="text-primary-dark-1 md:text-sm">Tasks</h3>
+        <h3 className="text-primary-dark-1 md:text-sm">
+          Tasks <span className="text-muted-1">({tasks.length})</span>
+        </h3>
         <div className="flex gap-2">
           {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
             <button
-              className="cursor-pointer text-xs text-primary-2/70 rounded-full px-2 border border-primary-2/70 hover:border-primary-1 hover:text-primary-2 transition-colors duration-200 ease-in-out"
+              className="cursor-pointer bg-primary-dark-1/80 text-xs text-white border border-primary-dark-1 rounded-lg px-2 hover:text-white hover:bg-primary-dark-1 transition-colors duration-200 ease-in-out shadow-md shadow-muted-1/20"
               onClick={() => openModal({ type: "manageTaskTypes" })}
             >
               Manage task types
@@ -32,7 +34,7 @@ export const TasksOverview = () => {
           )}
           {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
             <button
-              className="cursor-pointer text-xs text-white rounded-full px-2 bg-primary-2/80 hover:bg-primary-1 transition-colors duration-200 ease-in-out"
+              className="cursor-pointer text-xs text-white px-2 bg-primary-2/80 hover:bg-primary-1 rounded-lg transition-colors duration-200 ease-in-out shadow-md shadow-muted-1/20"
               onClick={handleOpenCreateModal}
             >
               + Add task
@@ -40,7 +42,7 @@ export const TasksOverview = () => {
           )}
         </div>
       </header>
-      <div className="border rounded-md overflow-hidden mt-2 border-muted-1/30">
+      <div className="border rounded-md overflow-hidden mt-2 border-muted-1/30 shadow-md shadow-muted-1/10">
         {Boolean(tasks.length) ? (
           <table className="w-full h-full bg-white px-2 table-fixed">
             <colgroup>
@@ -52,7 +54,7 @@ export const TasksOverview = () => {
               <col className="max-md:hidden w-[17.5%]" />
             </colgroup>
             <thead>
-              <tr className="text-left ml-10 border-b border-muted-1/30">
+              <tr className="text-left ml-10 border-b border-muted-1/30 bg-muted-1/15">
                 <th className="py-2 pl-3 pr-2 font-medium text-muted-1 text-sm">
                   Title
                 </th>
