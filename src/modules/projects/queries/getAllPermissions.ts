@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { Permission } from "../types/Permission";
+import { Permission } from "../types/permission";
 
 const API_URL = process.env.API_URL;
 const PERMISSIONS_PATH = "/permissions";
