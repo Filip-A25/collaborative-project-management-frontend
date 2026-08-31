@@ -1,7 +1,5 @@
-"use server";
-
 import { cookies } from "next/headers";
-import { Permission } from "../types/permission";
+import { Permission } from "../types/Permission";
 
 const API_URL = process.env.API_URL;
 const PERMISSIONS_PATH = "/permissions";
