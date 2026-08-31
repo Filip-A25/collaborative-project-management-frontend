@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import clsx from "clsx";
 import Link from "next/link";
 import { PRIVATE_ROUTES } from "@/const/Routes";
-import { getStatusTextStyling } from "../lib/utils";
+import { getStatusTextStyling } from "../utils/getStatusTextStyling";
 
 interface Props {
   data: Project;

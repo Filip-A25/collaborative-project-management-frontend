@@ -3,7 +3,7 @@
 import { Project } from "../types/project";
 import { sidebarItems } from "../const/sidebarItems";
 import { LayoutHeading } from "@/shared/ui/LayoutHeading";
-import { getStatusTextStyling } from "../lib/utils";
+import { getStatusTextStyling } from "../utils/getStatusTextStyling";
 import clsx from "clsx";
 import { CompletionProgress } from "./CompletionProgress";
 import { ProjectInfoGrid } from "./ProjectInfoGrid";
