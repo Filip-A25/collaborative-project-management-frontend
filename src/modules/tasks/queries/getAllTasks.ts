@@ -1,5 +1,3 @@
-"use server";
-
 import { cookies } from "next/headers";
 import { API_ENDPOINTS } from "@/shared/const/apiEndpoints";
 import { Task } from "../types/task";
