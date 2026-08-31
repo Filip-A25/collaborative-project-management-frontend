@@ -10,6 +10,7 @@ export const updateProjectSchema = z.object({
   currency: z.enum(["EUR", "USD", "GBP", "JPY", "CNY", "CHF", "AUD", "CAD"]),
   budgetAmount: z.coerce.number().nonnegative().optional(),
   status: z.enum(["Active", "Planning", "OnHold", "Completed"]),
+  completedDate: z.iso.date().optional(),
   roles: projectRoleSchema
     .omit({ projectId: true })
     .extend({ id: z.number().optional() })

@@ -45,6 +45,7 @@ export const UpdateProjectForm = ({ permissionsData, projectData }: Props) => {
       currency: projectData.currency ?? "EUR",
       budgetAmount: projectData.budgetAmount ?? 0,
       status: projectData.status,
+      completedDate: projectData.completedDate,
       roles: rolesWithoutProjectId,
     },
     resolver: zodResolver(updateProjectSchema),
@@ -160,6 +161,17 @@ export const UpdateProjectForm = ({ permissionsData, projectData }: Props) => {
           )}
         />
       </div>
+
+      <Input
+        name="completedDate"
+        placeholder="Enter completed date"
+        type="date"
+        register={register}
+        hasError={Boolean(errors.completedDate)}
+        errorMessage={errors.completedDate?.message}
+        customStyling="md:min-w-[420px] md:w-1/2"
+        label="Completed date"
+      />
 
       <div className="mt-4">
         <p>Roles</p>

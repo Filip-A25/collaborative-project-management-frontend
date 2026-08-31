@@ -10,12 +10,12 @@ export interface Project {
   description: string;
   budgetAmount: number;
   currency: CurrencyValue;
-  completionPercentage: number;
   startDate: string;
   endDate: string;
   createdAt: string;
   updatedAt: string;
   status: Status;
+  completedDate: string;
   projectMembers: ProjectMember[];
   roles: ProjectRoleType[];
 }
