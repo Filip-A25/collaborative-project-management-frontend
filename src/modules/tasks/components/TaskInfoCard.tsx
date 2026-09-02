@@ -11,6 +11,7 @@ import { useTaskStore } from "../store/taskStore";
 import { useProjectAuthorization } from "@/modules/projects/hooks/useProjectAuthorization";
 import { PermissionName } from "@/modules/projects/types/permissionName";
 import { ModalPortal } from "@/shared/ui/ModalPortal";
+import { TaskComments } from "./TaskComments";
 
 interface Props {
   projectId: string;
@@ -71,7 +72,7 @@ export const TaskInfoCard = ({
   return (
     <ModalPortal
       closeFn={handleCloseModal}
-      wrapperStyling="mx-3 px-8 py-4 md:h-[90vh] md:max-h-[620px] md:w-[500px] overflow-scroll flex flex-col"
+      wrapperStyling="mx-3 px-8 py-4 h-[90vh] max-h-[620px] md:w-[500px] overflow-scroll flex flex-col"
     >
       <div className="flex flex-col">
         <h3 className="text-primary-dark-1/80 font-medium text-xl mb-2">
@@ -174,6 +175,7 @@ export const TaskInfoCard = ({
             <p className="text-sm text-primary-dark-1">{task.description}</p>
           </div>
         </div>
+        <TaskComments projectId={projectId} taskId={taskId} />
       </div>
     </ModalPortal>
   );
