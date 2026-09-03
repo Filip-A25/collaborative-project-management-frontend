@@ -12,7 +12,7 @@ const calculateCompletionProgress = (tasks: Task[]) => {
     (task) => task.status === "Completed",
   ).length;
 
-  return (completedTasks / totalTasks) * 100;
+  return ((completedTasks / totalTasks) * 100).toFixed(2);
 };
 
 export const CompletionProgress = () => {

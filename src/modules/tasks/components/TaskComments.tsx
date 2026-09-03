@@ -10,6 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormButton } from "@/shared/ui/FormButton";
 import { useTaskComments } from "../hooks/useTaskComments";
 import { TaskCommentsList } from "./TaskCommentsList";
+import { useEffect } from "react";
+import { getAllTaskComments } from "../queries/getAllTaskComments";
 
 interface Props {
   projectId: string;
@@ -17,10 +19,7 @@ interface Props {
 }
 
 export const TaskComments = ({ projectId, taskId }: Props) => {
-  const { addNewComment, taskComments } = useTaskComments({
-    projectId,
-    taskId,
-  });
+  const { addNewComment, taskComments, setTaskComments } = useTaskComments();
 
   const form = useForm<AddTaskCommentType>({
     resolver: zodResolver(addTaskCommentSchema),
@@ -31,6 +30,17 @@ export const TaskComments = ({ projectId, taskId }: Props) => {
     register,
     formState: { errors },
   } = form;
+
+  useEffect(() => {
+    if (!taskId) return;
+
+    async function getAllTaskCommentsData() {
+      const data = await getAllTaskComments(projectId, taskId);
+      setTaskComments(data);
+    }
+
+    getAllTaskCommentsData();
+  }, [projectId, taskId, setTaskComments]);
 
   return (
     <div className="mt-10">
@@ -57,7 +67,11 @@ export const TaskComments = ({ projectId, taskId }: Props) => {
           customStyling="text-xs mt-2"
         />
       </form>
-      <TaskCommentsList comments={taskComments} />
+      <TaskCommentsList
+        comments={taskComments}
+        projectId={projectId}
+        taskId={taskId}
+      />
     </div>
   );
 };

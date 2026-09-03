@@ -5,10 +5,44 @@ import { useModalStore } from "@/shared/stores/modalStore";
 import { useTaskStore } from "../store/taskStore";
 import { useProjectAuthorization } from "@/modules/projects/hooks/useProjectAuthorization";
 import { PermissionName } from "@/modules/projects/types/permissionName";
+import { useMemo, useState } from "react";
+import { Task } from "../types/task";
+import Select from "react-select";
+
+const sortByArray = [
+  {
+    value: "startFirst",
+    name: "Start first",
+  },
+  {
+    value: "startLast",
+    name: "Start last",
+  },
+];
+
+const getSortedTasks = (tasks: Task[], sortBy: string) => {
+  return [...tasks].sort((a, b) => {
+    if (!a.startDate && !b.startDate) return 0;
+    if (!a.startDate) return 1;
+    if (!b.startDate) return -1;
+
+    const firstDateTime = new Date(a.startDate).getTime();
+    const secondDateTime = new Date(b.startDate).getTime();
+
+    return sortBy === "startFirst"
+      ? firstDateTime - secondDateTime
+      : secondDateTime - firstDateTime;
+  });
+};
 
 export const TasksOverview = () => {
   const openModal = useModalStore((store) => store.openModal);
   const tasks = useTaskStore((store) => store.tasks);
+
+  const [sortedBy, setSortedBy] = useState<{
+    value: string;
+    name: string;
+  } | null>();
 
   const { doesUserHaveProjectPermission } = useProjectAuthorization();
 
@@ -17,16 +51,32 @@ export const TasksOverview = () => {
     document.body.style.overflow = "hidden";
   };
 
+  const sortedTasks = useMemo(() => {
+    if (!sortedBy) return getSortedTasks(tasks, "startFirst");
+    return getSortedTasks(tasks, sortedBy.value);
+  }, [tasks, sortedBy]);
+
   return (
     <div className="w-full max-xl:order-2">
-      <header className="flex justify-between">
-        <h3 className="text-primary-dark-1 md:text-sm">
-          Tasks <span className="text-muted-1">({tasks.length})</span>
-        </h3>
-        <div className="flex gap-2">
+      <header className="flex justify-between max-md:flex-col max-md:gap-3">
+        <div className="flex items-center gap-3">
+          <h3 className="text-primary-dark-1 md:text-sm">
+            Tasks{" "}
+            <span className="text-muted-1">({sortedTasks?.length ?? 0})</span>
+          </h3>
+          <Select
+            instanceId="assigned-to-select"
+            options={sortByArray}
+            defaultValue={sortByArray[0]}
+            onChange={(selected) => setSortedBy(selected)}
+            getOptionLabel={(selected) => selected.name}
+            className="text-xs"
+          />
+        </div>
+        <div className="flex items-end gap-2">
           {doesUserHaveProjectPermission(PermissionName.ManageProject) && (
             <button
-              className="cursor-pointer bg-primary-dark-1/80 text-xs text-white border border-primary-dark-1 rounded-lg px-2 hover:text-white hover:bg-primary-dark-1 transition-colors duration-200 ease-in-out shadow-md shadow-muted-1/20"
+              className="h-6 cursor-pointer bg-primary-dark-1/80 text-xs text-white border border-primary-dark-1 rounded-lg px-2 hover:text-white hover:bg-primary-dark-1 transition-colors duration-200 ease-in-out shadow-md shadow-muted-1/20"
               onClick={() => openModal({ type: "manageTaskTypes" })}
             >
               Manage task types
@@ -34,7 +84,7 @@ export const TasksOverview = () => {
           )}
           {doesUserHaveProjectPermission(PermissionName.ManageTasks) && (
             <button
-              className="cursor-pointer text-xs text-white px-2 bg-primary-2/80 hover:bg-primary-1 rounded-lg transition-colors duration-200 ease-in-out shadow-md shadow-muted-1/20"
+              className="h-6 cursor-pointer text-xs text-white px-2 bg-primary-2/80 hover:bg-primary-1 rounded-lg transition-colors duration-200 ease-in-out shadow-md shadow-muted-1/20"
               onClick={handleOpenCreateModal}
             >
               + Add task
@@ -43,7 +93,7 @@ export const TasksOverview = () => {
         </div>
       </header>
       <div className="border rounded-md overflow-hidden mt-2 border-muted-1/30 shadow-md shadow-muted-1/10">
-        {Boolean(tasks.length) ? (
+        {sortedTasks && Boolean(sortedTasks.length) ? (
           <table className="w-full h-full bg-white px-2 table-fixed">
             <colgroup>
               <col className="max-md:w-[25%] w-[35%]" />
@@ -76,7 +126,7 @@ export const TasksOverview = () => {
               </tr>
             </thead>
             <tbody className="w-full h-full">
-              {tasks.map((task) => (
+              {sortedTasks.map((task) => (
                 <TaskRow key={task.id} task={task} />
               ))}
             </tbody>

@@ -3,15 +3,10 @@
 import { AddTaskCommentType } from "../schemas/add-task-comment";
 import { addTaskComment } from "../queries/addTaskComment";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
-import { getAllTaskComments } from "../queries/getAllTaskComments";
+import { deleteTaskComment } from "../queries/deleteTaskComment";
+import { useState } from "react";
 
-interface Props {
-  projectId: string;
-  taskId: string;
-}
-
-export const useTaskComments = ({ projectId, taskId }: Props) => {
+export const useTaskComments = () => {
   const [taskComments, setTaskComments] = useState<TaskComment[]>([]);
 
   const addNewComment = async (
@@ -32,16 +27,32 @@ export const useTaskComments = ({ projectId, taskId }: Props) => {
     toast.success(response.message);
   };
 
-  useEffect(() => {
-    if (!taskId) return;
+  const deleteCurrentTaskComment = async (
+    projectId: string,
+    taskId: string,
+    commentId: number,
+  ) => {
+    const response = await deleteTaskComment(projectId, taskId, commentId);
 
-    async function getAllTaskCommentsData() {
-      const data = await getAllTaskComments(projectId, taskId);
-      setTaskComments(data);
+    if (!response.success) {
+      toast.error(response.message);
+      return;
     }
 
-    getAllTaskCommentsData();
-  }, [projectId, taskId]);
+    if (response.message) {
+      toast.success(response.message);
+    }
 
-  return { addNewComment, taskComments };
+    const filteredTaskComments = [...taskComments].filter(
+      (comment) => comment.id !== commentId,
+    );
+    setTaskComments(filteredTaskComments);
+  };
+
+  return {
+    addNewComment,
+    taskComments,
+    setTaskComments,
+    deleteCurrentTaskComment,
+  };
 };
