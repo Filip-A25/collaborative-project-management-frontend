@@ -86,7 +86,9 @@ export const ProjectInvitesOverview = ({ invites }: Props) => {
           </tbody>
         </table>
 
-        <p className="text-muted-1 text-sm mx-auto mt-6">No invites found.</p>
+        {!Boolean(invites.length) && (
+          <p className="text-muted-1 text-sm mx-auto mt-6">No invites found.</p>
+        )}
 
         <div className="md:hidden">
           {allInvites.map((invite) => (
