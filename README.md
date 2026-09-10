@@ -34,7 +34,7 @@ docker build -t collab-pm-app .
 Zatim pokrenite kontejner:
 
 ```bash
-# Unutar root direktorija kreirajte Docker sliku
+# Pokrenite kontejner "collab-pm-app"
 docker run --name collab-pm-app -p 3000:3000 collab-pm-app
 ```
 
