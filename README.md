@@ -31,7 +31,7 @@ Stvorite `.env` datoteku s varijablama okruženja na temelju `.env.example`.
 docker build -t collab-pm-app .
 ```
 
-Zatim pokrenite kontejnere:
+Zatim pokrenite kontejner:
 
 ```bash
 # Unutar root direktorija kreirajte Docker sliku
